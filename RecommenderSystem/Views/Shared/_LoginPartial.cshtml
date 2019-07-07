@@ -3,20 +3,20 @@
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
-        </li>
-        <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
-    </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li style="margin-right: 20px;">
+                <span style=" color: white;">@User.Identity.GetUserName()</span>
+            </li>
+            <li style="margin-right: 20px;"><a style=" color: white;" href="javascript:document.getElementById('logoutForm').submit()">Odjavi se</a></li>
+        </ul>
     }
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+        <li>@Html.ActionLink("Registracija", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", style = "padding: 10px; color:white;" })</li>
+        <li>@Html.ActionLink("Prijava", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", style = "padding: 10px; color: white;" })</li>
     </ul>
 }

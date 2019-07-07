@@ -1,23 +1,62 @@
 ﻿@model RecommenderSystem.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Registracija";
 }
 
+<br />
+<hr />
 <h2>@ViewBag.Title.</h2>
 
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
+    <h4>Kreirajte novi nalog</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
+        <i class="fas fa-user" style="margin-left: 20px;"></i>
+        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Surname, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Surname, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <i class="fas fa-venus-mars" style="margin-left: 20px;"></i>
+        @Html.LabelFor(m => m.Gender, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.Gender, new SelectList(new List<Object> { "M","Ž" }),"Izaberite pol", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <i class="fas fa-envelope" style="margin-left: 20px;"></i>
         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
+        <i class="far fa-calendar-alt" style="margin-left: 20px;"></i>
+        @Html.LabelFor(m => m.BirthDate, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.BirthDate, new { @class = "form-control", @placeholder="dd.mm.yyyy" })
+        </div>
+    </div>
+    <div class="form-group">
+        <i class="fas fa-map-marker-alt" style="margin-left: 20px;"></i>
+        @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+        </div>
+        <span style="margin-left: 20px; font-size: 12px;">*Kasnije možete dodati još adresa.</span>
+    </div>
+    <div class="form-group">
+        <i class="fas fa-key" style="margin-left: 20px;"></i>
         @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
@@ -31,7 +70,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <input type="submit" class="btn btn-default btn-outline-dark" value="Registracija" />
         </div>
     </div>
 }

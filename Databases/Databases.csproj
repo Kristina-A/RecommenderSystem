@@ -80,7 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DomainModel\Class1.cs" />
+    <Compile Include="DomainModel\User.cs" />
     <Compile Include="MongodbFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimescaledbFunctions.cs" />

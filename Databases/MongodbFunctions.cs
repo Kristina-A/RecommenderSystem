@@ -22,5 +22,12 @@ namespace Databases
             db = client.GetDatabase("webshopdb");
 
         }
+
+        public void InsertUser(User user)
+        {
+            var usersCollection = db.GetCollection<User>("users");
+
+            usersCollection.InsertOne(user);
+        }
     }
 }

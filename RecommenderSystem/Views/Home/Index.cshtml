@@ -1,31 +1,66 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Početna strana";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+<br />
+<br />
 
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+
+    <div class="col-3">
+        <div id="categories" class="bg-dark" style="color: white; width: inherit; padding-left: 10px; height: 100%;">
+            <br />
+            <p><i class="fas fa-book-open"></i>  Kategorije:</p>
+            <hr />
+            <ul id="myUL">
+                <li>
+                    <span class="caret">Mobilni uređaji</span>
+                    @*<ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Laptopovi i tableti" })" style="text-decoration: none; color: white;"> Laptopovi i tableti</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Mobilni telefoni" })" style="text-decoration: none; color: white;"> Mobilni telefoni</a></li>
+                        </ul>*@
+                </li>
+                <hr />
+                <li>
+                    <span class="caret">Računari</span>
+                    @*<ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Gotove konfiguracije" })" style="text-decoration: none; color: white;"> Gotove konfiguracije</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Racunarske komponente" })" style="text-decoration: none; color: white;"> Računarske komponente</a></li>
+                        </ul>*@
+                </li>
+                <hr />
+                <li>
+                    <span class="caret">Tv, audio, foto, video</span>
+                    @*<ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "TV i audio" })" style="text-decoration: none; color: white;"> Tv i audio</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Foto i video" })" style="text-decoration: none; color: white;"> Foto i video</a></li>
+                        </ul>*@
+                </li>
+                <hr />
+                <li>
+                    <span class="caret">Monitori, periferije, konzole</span>
+                    @*<ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Monitori i periferije" })" style="text-decoration: none; color: white;"> Monitori i periferije</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Stampaci" })" style="text-decoration: none; color: white;"> Štampači</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Konzole" })" style="text-decoration: none; color: white;"> Konzole</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Memorije" })" style="text-decoration: none; color: white;"> Memorije</a></li>
+                        </ul>*@
+                </li>
+                <hr />
+                <li>
+                    <span class="caret"><a href="@Url.Action("CategoryProducts", "Product", new { category = "Mrezna oprema" })" style="text-decoration: none; color: white;"> Mrežna oprema</a></span>
+                    <ul class="nested"></ul>
+                </li>
+                <hr />
+                <li>
+                    <span class="caret"><a href="@Url.Action("CategoryProducts", "Product", new { category = "Bela tehnika" })" style="text-decoration: none; color: white;"> Bela tehnika</a></span>
+                    <ul class="nested"></ul>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+
+    <div class="col-5" style="margin-left:10%; margin-top:10%;">
+        Da biste mogli da pregledate proizvode i kupujete morate da se prijavite ili registrujete!!!
     </div>
 </div>

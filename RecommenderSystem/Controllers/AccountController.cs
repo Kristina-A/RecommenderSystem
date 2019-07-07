@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using RecommenderSystem.Models;
+using Databases;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace RecommenderSystem.Controllers
 {
@@ -155,13 +157,34 @@ namespace RecommenderSystem.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    // Code for users to db
+                    var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+                    await roleManager.CreateAsync(new IdentityRole("User"));
+                    await UserManager.AddToRoleAsync(user.Id, "User");
+
+                    // Uncomment to add admin
+                    //await roleManager.CreateAsync(new IdentityRole("Admin"));
+                    //await UserManager.AddToRoleAsync(user.Id, "Admin");
+                    //////////////////////////////////////////////////////
                     
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+
+                    // Adding user to mongodb 
+                    MongodbFunctions mongo = new MongodbFunctions();
+
+                    Databases.DomainModel.User newUser = new Databases.DomainModel.User
+                    {
+                        Email = model.Email,
+                        Name = model.FirstName,
+                        BirthDate = model.BirthDate,
+                        Surname = model.Surname
+                    };
+                    newUser.Address.Add(model.Address);
+
+                    mongo.InsertUser(newUser);
 
                     return RedirectToAction("Index", "Home");
                 }

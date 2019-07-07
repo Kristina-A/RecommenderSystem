@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace RecommenderSystem.Models
 {
@@ -55,29 +56,50 @@ namespace RecommenderSystem.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Šifra")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Zapamti me?")]
         public bool RememberMe { get; set; }
     }
 
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "Ime")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Prezime")]
+        public string Surname { get; set; }
+
+        [Required]
+        [Display(Name = "Pol")]
+        public char Gender { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Required]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Datum rođenja")]
+        public string BirthDate { get; set; }
+
+        [Required]
+        [Display(Name = "Adresa")]
+        public string Address { get; set; }
+
+        [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Šifra")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Potvrdite šifru")]
+        [Compare("Password", ErrorMessage = "Šifra i potvrđena šifra se ne poklapaju.")]
         public string ConfirmPassword { get; set; }
     }
 
