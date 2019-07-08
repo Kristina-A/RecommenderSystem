@@ -83,9 +83,9 @@ namespace RecommenderSystem.Models
         public string Email { get; set; }
 
         [Required]
-        [DataType(DataType.PhoneNumber)]
+        [DataType(DataType.Date)]
         [Display(Name = "Datum rođenja")]
-        public string BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         [Required]
         [Display(Name = "Adresa")]

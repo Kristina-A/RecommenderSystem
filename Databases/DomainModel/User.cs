@@ -16,7 +16,7 @@ namespace Databases.DomainModel
         public char Gender { get; set; }
         public string Email { get; set; }
         public List<string> Address { get; set; }
-        public string BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         public List<MongoDBRef> Orders { get; set; }
 

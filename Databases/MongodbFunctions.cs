@@ -29,5 +29,51 @@ namespace Databases
 
             usersCollection.InsertOne(user);
         }
+
+        public void InsertProduct(Product product, string cat)
+        {
+            var productsCollection = db.GetCollection<Product>("products");
+            var categoriesCollection = db.GetCollection<Category>("categories");
+            var filter = Builders<Category>.Filter.Eq("Name", cat);
+
+            productsCollection.InsertOne(product);
+
+            Category category = GetCategory(cat);
+            category.Products.Add(new MongoDBRef("products", product.Id));
+            var update = Builders<Category>.Update.Set("Products", category.Products);
+
+            categoriesCollection.UpdateOne(filter, update);
+        }
+
+        public List<string> GetSubcategories(string category)
+        {
+            var categoriesCollection = db.GetCollection<Category>("categories");
+
+            var filter = Builders<Category>.Filter.Eq("Name", category);
+            var categories = categoriesCollection.Find(filter);
+
+            Category cat = categories.First();
+
+            return cat.Subcategories;
+        }
+
+        public Category GetCategory(string category)
+        {
+            var categoriesCollection = db.GetCollection<Category>("categories");
+
+            var filter = Builders<Category>.Filter.Eq("Name", category);
+            var categories = categoriesCollection.Find(filter);
+
+            return categories.First();
+        }
+
+        public List<Product> GetCategoryProducts(string category)
+        {
+            var productsCollection = db.GetCollection<Product>("products");
+
+            var filter = Builders<Product>.Filter.Eq("Subcategory", category);
+
+            return productsCollection.Find(filter).ToList();
+        }
     }
 }
