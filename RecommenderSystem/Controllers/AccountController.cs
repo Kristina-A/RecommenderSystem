@@ -180,6 +180,7 @@ namespace RecommenderSystem.Controllers
                         Email = model.Email,
                         Name = model.FirstName,
                         BirthDate = model.BirthDate,
+                        Phone = model.Phone,
                         Surname = model.Surname
                     };
                     newUser.Address.Add(model.Address);

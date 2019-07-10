@@ -1,0 +1,110 @@
+﻿@model Databases.DomainModel.CheckoutDetails
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<h2 class="text-center">Checkout</h2>
+<hr />
+
+<div class="row">
+    <form id="formProduct" class="col-md-6 col-md-offset-2">
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Ime i prezime:</label>
+            <label class="col-sm-7">@Model.User.Name @Model.User.Surname</label>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Adresa:</label>
+            <div class="col-sm-7">
+                <select class="custom-select" id="selectAddress">
+                    <option value="" selected>Izaberite adresu</option>
+                    @foreach (var adr in Model.User.Address)
+                    {
+                        <option value="@adr">@adr</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Nova adresa (popuniti ako ni jedna od gore navedenih ne odgovara):</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="inputAddress">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Email:</label>
+            <label class="col-sm-7">@Model.User.Email</label>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Telefon:</label>
+            <label class="col-sm-7">@Model.User.Phone</label>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Napomena:</label>
+            <div class="col-sm-7">
+                <textarea class="form-control" id="inputNote" rows="3"></textarea>
+            </div>
+        </div>
+
+        <label class=" control-label">Način plaćanja:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="paying" id="method1" value="kartica">
+            <label class="form-check-label">
+                Platnom karticom
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="paying" id="method2" value="pouzece">
+            <label class="form-check-label">
+                Pouzećem
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="paying" id="method3" value="racun">
+            <label class="form-check-label">
+                Upaltom na račun
+            </label>
+        </div>
+
+        <br />
+        <br />
+        @if (Model.Products.Count > 0)
+        {
+            <button class="btn btn-success col-sm-offset-3 btn-lg" id="shop" type="button"><i class="fas fa-check"></i><span>&nbsp; Kupi proizvode</span></button>
+            <button class="btn btn-danger col-sm-offset-1 btn-lg" id="discardShopping" type="button"><i class="fas fa-times"></i><span>&nbsp; Otkaži kupovinu</span></button>
+            <br /> <br />
+        }
+    </form>
+
+    <div class="col-md-6">
+        <h4 class="text-center">Proizvodi</h4>
+        <hr />
+
+        @{ var price = 0.0;}
+        @foreach (var p in Model.Products)
+        {
+            <div class="form-group row">
+                <label class="col-sm-4 control-label">@p.Name</label>
+                <label class="col-sm-4">@p.Price din</label>
+                <button class="deleteFromChart btn btn-danger col-sm-4 btn-sm" id="@p.Id" type="button"><i class="fas fa-times"></i><span>&nbsp; Obriši</span></button>
+            </div>
+            price += p.Price;
+        }
+        <br />
+        <div class="form-group row">
+            <label class="col-sm-4 control-label">Ukupna cena: </label>
+            <label class="col-sm-4">@price din</label>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/Scripts/My scripts/CheckoutScript.js")
+}
+

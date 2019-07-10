@@ -15,6 +15,7 @@ namespace Databases.DomainModel
         public string Surname { get; set; }
         public char Gender { get; set; }
         public string Email { get; set; }
+        public string Phone { get; set; }
         public List<string> Address { get; set; }
         public DateTime BirthDate { get; set; }
 

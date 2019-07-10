@@ -83,6 +83,11 @@ namespace RecommenderSystem.Models
         public string Email { get; set; }
 
         [Required]
+        [DataType(DataType.PhoneNumber)]
+        [Display(Name = "Broj telefona")]
+        public string Phone { get; set; }
+
+        [Required]
         [DataType(DataType.Date)]
         [Display(Name = "Datum rođenja")]
         public DateTime BirthDate { get; set; }

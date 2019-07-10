@@ -82,9 +82,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainModel\AdminResponse.cs" />
     <Compile Include="DomainModel\Category.cs" />
+    <Compile Include="DomainModel\CheckoutDetails.cs" />
+    <Compile Include="DomainModel\Message.cs" />
+    <Compile Include="DomainModel\MessageShow.cs" />
+    <Compile Include="DomainModel\Order.cs" />
     <Compile Include="DomainModel\Product.cs" />
+    <Compile Include="DomainModel\Review.cs" />
+    <Compile Include="DomainModel\ReviewShow.cs" />
     <Compile Include="DomainModel\User.cs" />
+    <Compile Include="DomainModel\UserShow.cs" />
     <Compile Include="MongodbFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimescaledbFunctions.cs" />

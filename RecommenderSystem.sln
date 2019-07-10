@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommenderSystem", "Recomm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Databases", "Databases\Databases.csproj", "{BBEA5D1F-1A0C-487D-8D51-77AF44452466}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationEngine", "RecommendationEngine\RecommendationEngine.csproj", "{C9402A65-9BC3-414E-AD7B-0EA720B7E426}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BBEA5D1F-1A0C-487D-8D51-77AF44452466}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBEA5D1F-1A0C-487D-8D51-77AF44452466}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBEA5D1F-1A0C-487D-8D51-77AF44452466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9402A65-9BC3-414E-AD7B-0EA720B7E426}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9402A65-9BC3-414E-AD7B-0EA720B7E426}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9402A65-9BC3-414E-AD7B-0EA720B7E426}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9402A65-9BC3-414E-AD7B-0EA720B7E426}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

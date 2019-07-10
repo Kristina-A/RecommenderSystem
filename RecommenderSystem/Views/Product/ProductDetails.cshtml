@@ -1,0 +1,209 @@
+﻿@model Databases.DomainModel.Product
+@{
+    ViewBag.Title = "ProductDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<hr />
+<h2 class="text-center">@Model.Name.ToUpper()</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <img src="~/Resources/@Model.Picture" class="@Model.Id rounded col-md-6" id="pictureBox" alt="Product picture" style="width:300px; height:200px" data-toggle="modal" data-target="#pictureModal">
+    </div>
+    <div class="col-md-6 float-right">
+        @if (User.IsInRole("Admin"))
+        {
+            <button type="button" class="btn btn-secondary btn-lg" id="editProduct" data-toggle="modal" data-target="#editModal"><i class="fas fa-pen"></i><span>&nbsp; Izmeni proizvod</span></button>
+        }
+        else if (User.IsInRole("User"))
+        {
+            <button type="button" class="btn btn-secondary btn-lg" id="addToChart"><span>Dodaj u korpu &nbsp;</span><i class="fas fa-shopping-cart"></i></button>
+        }
+        <br />
+        <br />
+        <h5 class="col-sm-6 control-label">Cena: @Model.Price</h5>
+        <div class="row">
+            <h5 class="col-sm-6 control-label" id="lblGrade">Prosečna ocena </h5>
+            <label id="showReviews">Prikaži sve recenzije</label>
+        </div>
+        <br />
+        <div id="reviews"></div>
+        <br />
+        <br />
+        @if (User.IsInRole("Admin"))
+        {
+            <button type="button" class="btn btn-danger btn-lg" id="deleteProduct"><i class="fas fa-trash-alt"></i><span>&nbsp; Obriši proizvod</span></button>
+        }
+        else if (User.IsInRole("User"))
+        {
+            <label class="col-sm-6 control-label">
+                Ocenite proizvod: <i class="far fa-star" id="1" data-toggle="modal" data-target="#reviewModal"></i>
+                <i class="far fa-star" id="2" data-toggle="modal" data-target="#reviewModal"></i>
+                <i class="far fa-star" id="3" data-toggle="modal" data-target="#reviewModal"></i>
+                <i class="far fa-star" id="4" data-toggle="modal" data-target="#reviewModal"></i>
+                <i class="far fa-star" id="5" data-toggle="modal" data-target="#reviewModal"></i>
+            </label>
+        }
+    </div>
+</div>
+<br />
+<br />
+<table class="table table-striped col-md-9" id="charTable">
+    <thead>
+        <tr class="table-secondary">
+            <th>Karakteristike</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>
+                    <button type="button" class="btn btn-secondary" id="addChar" data-toggle="modal" data-target="#characteristicsModal"><i class="fas fa-plus"></i><span>&nbsp; Dodaj karakteristiku</span></button>
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var characteristic in Model.Characteristics)
+        {
+            var list = characteristic.Split(':');
+            <tr>
+                <td class="name">@list[0]</td>
+                <td class="value">@list[1]</td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <button type="button" class="btn btn-secondary" id="editChar" data-toggle="modal" data-target="#characteristicsModal"><i class="fas fa-pen"></i><span>&nbsp; Izmeni</span></button>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<br />
+<br />
+<label id="showComments">Komentari</label>
+<div id="comments">
+    @if (User.IsInRole("User"))
+    {
+        <textarea class="form-control col-md-6" rows="3" id="comment" placeholder="Ostavite komentar"></textarea>
+        <br />
+        <button type="button" class="btn btn-secondary" id="postComment">Postavi komentar</button>
+        <br />
+        <br />
+    }
+</div>
+
+
+<!--Modal koji prikazuje uvecanu sliku-->
+<div class="modal fade" id="pictureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img src="~/Resources/@Model.Picture" class="rounded mx-auto d-block" alt="Product picture" style="width:400px; height:400px" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal za edit proizvoda, ne moze sve da se menja-->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Naziv:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="inputEditName" value="@Model.Name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Cena:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="inputEditPrice" value="@Model.Price">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Slika:</label>
+                    <input type="file" class="form-control-file" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*" id="btnEditPicture">
+                </div>
+                <br />
+                <button class="btn btn-success col-sm-offset-3" id="saveEditing" type="button"><i class="fas fa-check"></i><span>&nbsp; Sačuvaj izmene</span></button>
+                <button class="btn btn-danger col-sm-offset-1" id="discardEditing" type="button"><i class="fas fa-times"></i><span>&nbsp; Otkaži</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal za dodavanje i edit karakteristika-->
+<div class="modal fade" id="characteristicsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Naziv:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="inputNameChar">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Vrednost:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="inputValueChar">
+                    </div>
+                </div>
+                <br />
+                <button class="btn btn-success col-sm-offset-3" id="saveChar" type="button"><i class="fas fa-check"></i><span>&nbsp; Sačuvaj</span></button>
+                <button class="btn btn-danger col-sm-offset-1" id="discardChar" type="button"><i class="fas fa-times"></i><span>&nbsp; Otkaži</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modal za ocenjivanje proizvoda-->
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Ocena: </label>
+                    <label class="col-sm-6 control-label" id="lblStar"></label>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-3 control-label">Komentar:</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" rows="3" id="inputComment" placeholder="Ostavite komentar"></textarea>
+                    </div>
+                </div>
+                <br />
+                <button class="btn btn-success col-sm-offset-3" id="saveReview" type="button"><i class="fas fa-check"></i><span>&nbsp; Sačuvaj</span></button>
+                <button class="btn btn-danger col-sm-offset-1" id="discardReview" type="button"><i class="fas fa-times"></i><span>&nbsp; Otkaži</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/Scripts/My scripts/ProductDetailsScript.js")
+}
