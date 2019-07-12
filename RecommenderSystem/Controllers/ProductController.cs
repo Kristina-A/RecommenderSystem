@@ -148,6 +148,11 @@ namespace RecommenderSystem.Controllers
                 users.Add(userShow);
             }
 
+            //Databases.DomainModel.User u = mongo.GetUser(User.Identity.Name);
+
+            //TimescaledbFunctions tdb = new TimescaledbFunctions();
+            //tdb.SeeReviews(u.Id.ToString(), id);
+
             return Json(new { number = count, revs = reviews, people = users }, JsonRequestBehavior.AllowGet);
         }
 
@@ -220,9 +225,11 @@ namespace RecommenderSystem.Controllers
 
         [Authorize(Roles = "User")]
         [HttpPost]
-        public void AddReview(string id, double grade, string comment)
+        public void AddReview(string id, int grade, string comment)
         {
             MongodbFunctions mongo = new MongodbFunctions();
+
+            Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
 
             Databases.DomainModel.Review newReview = new Databases.DomainModel.Review
             {
@@ -232,6 +239,9 @@ namespace RecommenderSystem.Controllers
             };
 
             mongo.AddReview(newReview, id, User.Identity.Name);
+
+            //TimescaledbFunctions tdb = new TimescaledbFunctions();
+            //tdb.ReviewProduct(user.Id.ToString(), id, grade);
         }
 
         [Authorize(Roles = "Admin")]
@@ -249,6 +259,17 @@ namespace RecommenderSystem.Controllers
             };
 
             mongo.AddResponse(newResponse, messId);
+        }
+
+        [Authorize(Roles = "User")]
+        [HttpPost]
+        public void ViewProduct(string prodID)
+        {
+            MongodbFunctions mongo = new MongodbFunctions();
+            Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+
+            //TimescaledbFunctions tdb = new TimescaledbFunctions();
+            //tdb.ViewProduct(user.Id.ToString(), prodID);
         }
     }
 }

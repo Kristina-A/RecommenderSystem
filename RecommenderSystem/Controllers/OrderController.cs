@@ -111,6 +111,48 @@ namespace RecommenderSystem.Controllers
             order.Address = address;
 
             mongo.CloseOrder(order);
+
+            //TimescaledbFunctions tdb = new TimescaledbFunctions();
+            //foreach(MongoDBRef p in order.Products)
+            //{
+            //    Databases.DomainModel.Product prod = mongo.GetProduct(new ObjectId(p.ToString()));
+            //    tdb.BuyProduct(user.Id.ToString(), prod.Id.ToString(), prod.Price);
+            //}
+        }
+
+        [HttpPost]
+        public JsonResult UpdateChart()
+        {
+            MongodbFunctions mongo = new MongodbFunctions();
+
+            Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+            Databases.DomainModel.Order order = mongo.GetOpenOrder(user.Id);//vraca opened order, samo 1 po useru moze da postoji
+
+            int count;
+            List<Databases.DomainModel.ProductShow> products = new List<Databases.DomainModel.ProductShow>();
+
+            if (order == null)
+                count = 0;
+            else
+            {
+                count = order.Products.Count;
+
+                foreach (MongoDBRef r in order.Products)
+                {
+                    Databases.DomainModel.Product product = mongo.GetProduct(new ObjectId(r.Id.ToString()));
+
+                    Databases.DomainModel.ProductShow pr = new Databases.DomainModel.ProductShow
+                    {
+                        Id = product.Id.ToString(),
+                        Name = product.Name,
+                        Price = product.Price
+                    };
+
+                    products.Add(pr);
+                }
+            }
+
+            return Json(new { number = count, prod = products }, JsonRequestBehavior.AllowGet);
         }
     }
 }

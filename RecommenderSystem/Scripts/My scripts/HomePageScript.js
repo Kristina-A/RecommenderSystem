@@ -8,4 +8,20 @@ $(document).ready(function () {
             this.classList.toggle("caret-down");
         });
     }
+
+    $("#viewProduct").on("click", function () {
+        var prodID = $(this).attr("href");
+        var links = prodID.split("/");
+
+        $.ajax({
+            type: "POST",
+            url: '/Product/ViewProduct',
+            data: { "prodID": links[3] },
+            success: function () {
+            },
+            error: function () {
+                alert("fail");
+            }
+        });
+    });
 });
