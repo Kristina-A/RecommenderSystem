@@ -38,8 +38,10 @@ $(document).ready(function () {
     if ($("#numNots").text() != "") {
         $.ajax({
             type: "POST",
-            url: '/Order/UpdateChart',
+            url: '/Notifications/GetNotifications',
             success: function (data) {
+                var num = data.number;
+                $("#numNots").text(num);
             },
             error: function () {
                 alert("fail");

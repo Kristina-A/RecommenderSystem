@@ -339,5 +339,15 @@ namespace Databases
 
             usersCollection.UpdateOne(filter, update);
         }
+
+        public Notification GetNotification(ObjectId id)
+        {
+            var notificationsCollection = db.GetCollection<Notification>("notifications");
+
+            var filter = Builders<Notification>.Filter.Eq("_id", id);
+            var notifications = notificationsCollection.Find(filter);
+
+            return notifications.First();
+        }
     }
 }
