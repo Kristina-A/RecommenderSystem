@@ -14,6 +14,8 @@ namespace Databases.DomainModel
         public string Content { get; set; }
         public string Tag { get; set; }
         public bool Read { get; set; }
+        public string Title { get; set; }
+        public DateTime Date { get; set; }
         public MongoDBRef User { get; set; }
     }
 }

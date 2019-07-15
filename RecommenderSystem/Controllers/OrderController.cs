@@ -112,12 +112,42 @@ namespace RecommenderSystem.Controllers
 
             mongo.CloseOrder(order);
 
-            //TimescaledbFunctions tdb = new TimescaledbFunctions();
+            TimescaledbFunctions tdb = new TimescaledbFunctions();
             //foreach(MongoDBRef p in order.Products)
             //{
             //    Databases.DomainModel.Product prod = mongo.GetProduct(new ObjectId(p.ToString()));
             //    tdb.BuyProduct(user.Id.ToString(), prod.Id.ToString(), prod.Price);
             //}
+
+            if (!tdb.NotificationSent(user.Id.ToString()) && (30000 - tdb.MonthShopping(user.Id.ToString())) < 3000)//notifikacija do popusta
+            {
+                Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
+                {
+                    Content = "Poštovani, do ostvarivanja popusta od 20% ostalo Vam je manje od 3000 dinara.",
+                    Title = "Mali iznos do popusta",
+                    Date = DateTime.Now.Date,
+                    Tag = "do_popusta",
+                    Read = false,
+                    User = new MongoDB.Driver.MongoDBRef("users", user.Id)
+                };
+
+
+                tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "do_popusta");
+            }
+            else if(tdb.MonthShopping(user.Id.ToString())>=30000)
+            {
+                Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
+                {
+                    Content = "Poštovani, ostvarili ste popust od 20% na sledeću kupovinu, koji možete iskoristiti u roku od nedelju dana.",
+                    Title = "Popust 20%",
+                    Date = DateTime.Now.Date,
+                    Tag = "popust",
+                    Read = false,
+                    User = new MongoDB.Driver.MongoDBRef("users", user.Id)
+                };
+
+                tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "popust");
+            }
         }
 
         [HttpPost]

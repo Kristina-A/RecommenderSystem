@@ -11,6 +11,21 @@
     par.appendChild(link);
 }
 
+function addNotification(id, title, date, read) {
+    var par = document.getElementById("alerts");
+
+    var link = document.createElement("a");
+    link.innerHTML = title + "            " + date;
+    link.setAttribute("id", id);
+
+    if (!read)
+        link.setAttribute("class", "dropdown-item btn btn-info");
+    else
+        link.setAttribute("class", "dropdown-item");
+
+    par.appendChild(link);
+}
+
 
 $(document).ready(function () {
 
@@ -23,7 +38,7 @@ $(document).ready(function () {
                 $("#numProducts").text(num);
                 var sum = 0;
                 for (var i = 0; i < num; i++) {
-                    addProduct(data.prod[i]["Id"], data.prod[i]["Name"], data.prod[i]["Price"]);
+                    addNotification(data.prod[i]["Id"], data.prod[i]["Name"], data.prod[i]["Price"]);
                     sum += parseInt(data.prod[i]["Price"]);
                 }
                 var txt = $("#total").text();
@@ -42,6 +57,9 @@ $(document).ready(function () {
             success: function (data) {
                 var num = data.number;
                 $("#numNots").text(num);
+                for (var i = 0; i < num; i++) {
+                    addProduct(data.alerts[i]["Id"], data.alerts[i]["Title"], data.alerts[i]["Date"], data.alerts[i]["Read"]);
+                }
             },
             error: function () {
                 alert("fail");

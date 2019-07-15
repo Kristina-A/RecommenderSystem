@@ -88,6 +88,7 @@
     <Compile Include="DomainModel\Message.cs" />
     <Compile Include="DomainModel\MessageShow.cs" />
     <Compile Include="DomainModel\Notification.cs" />
+    <Compile Include="DomainModel\NotificationShow.cs" />
     <Compile Include="DomainModel\Order.cs" />
     <Compile Include="DomainModel\Product.cs" />
     <Compile Include="DomainModel\ProductShow.cs" />

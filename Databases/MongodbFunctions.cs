@@ -160,6 +160,20 @@ namespace Databases
             return reviews.First();
         }
 
+        public Review GetReview(ObjectId userId, ObjectId prodId)
+        {
+            var reviewsCollection = db.GetCollection<Review>("reviews");
+
+            var filter = Builders<Review>.Filter.And(Builders<Review>.Filter.Eq("User", new MongoDBRef("users",userId)),
+                                                      Builders<Review>.Filter.Eq("Product",new MongoDBRef("products",prodId)));
+            var reviews = reviewsCollection.Find(filter).ToList();
+
+            if (reviews.Count == 0)
+                return null;
+            else
+                return reviews.First();
+        }
+
         public Message GetComment(ObjectId id)
         {
             var commentsCollection = db.GetCollection<Message>("messages");
@@ -348,6 +362,56 @@ namespace Databases
             var notifications = notificationsCollection.Find(filter);
 
             return notifications.First();
+        }
+
+        public ObjectId AddNotification(Notification notification, string email)
+        {
+            User user = GetUser(email);
+
+            notification.User = new MongoDBRef("users", user.Id);
+            var notificationsCollection = db.GetCollection<Notification>("notifications");
+            var usersCollection = db.GetCollection<User>("users");
+
+            notificationsCollection.InsertOne(notification);
+            user.Notifications.Add(new MongoDBRef("notifications", notification.Id));
+
+            var update = Builders<User>.Update.Set("Notifications", user.Notifications);
+            var filter = Builders<User>.Filter.Eq("Email", email);
+
+            usersCollection.UpdateOne(filter, update);
+
+            return notification.Id;
+        }
+
+        public void UpdateNotification(ObjectId notId, string tag)
+        {
+            var notificationsCollection = db.GetCollection<Notification>("notifications");
+
+            var filter = Builders<Notification>.Filter.Eq("_id", notId);
+            var update = Builders<Notification>.Update.Set("Tag", tag);
+
+            notificationsCollection.UpdateOne(filter, update);
+        }
+
+        public void UpdateNotificationStatus(ObjectId notId)
+        {
+            var notificationsCollection = db.GetCollection<Notification>("notifications");
+
+            var filter = Builders<Notification>.Filter.Eq("_id", notId);
+            var update = Builders<Notification>.Update.Set("Read", true);
+
+            notificationsCollection.UpdateOne(filter, update);
+        }
+
+        public void UpdateReview(ObjectId id, double grade, string comment)
+        {
+            var reviewsCollection = db.GetCollection<Review>("reviews");
+
+            var filter = Builders<Review>.Filter.Eq("_id", id);
+            var update = Builders<Review>.Update.Set("Grade", grade)
+                                                   .Set("Comment", comment);
+
+            reviewsCollection.UpdateOne(filter, update);
         }
     }
 }

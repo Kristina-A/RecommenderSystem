@@ -228,20 +228,47 @@ namespace RecommenderSystem.Controllers
         public void AddReview(string id, int grade, string comment)
         {
             MongodbFunctions mongo = new MongodbFunctions();
+            TimescaledbFunctions tdb = new TimescaledbFunctions();
 
             Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+            Databases.DomainModel.Review review = mongo.GetReview(user.Id, new ObjectId(id));
 
-            Databases.DomainModel.Review newReview = new Databases.DomainModel.Review
+            if (review==null)
             {
-                Grade = grade,
-                Comment = comment,
-                Product = new MongoDBRef("products", new ObjectId(id))
-            };
 
-            mongo.AddReview(newReview, id, User.Identity.Name);
+                Databases.DomainModel.Review newReview = new Databases.DomainModel.Review
+                {
+                    Grade = grade,
+                    Comment = comment,
+                    Product = new MongoDBRef("products", new ObjectId(id))
+                };
 
-            //TimescaledbFunctions tdb = new TimescaledbFunctions();
-            //tdb.ReviewProduct(user.Id.ToString(), id, grade);
+                mongo.AddReview(newReview, id, User.Identity.Name);
+
+                //tdb.ReviewProduct(user.Id.ToString(), id, grade);
+            }
+            else
+            {
+                mongo.UpdateReview(review.Id, grade, comment);
+                tdb.UpdateReview(user.Id.ToString(), id, grade);
+            }
+
+            if(tdb.LowGrades(user.Id.ToString())>=4)
+            {
+                Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
+                {
+                    Content = "Poštovani, primetili smo da ste više proizvoda ocenili lošom ocenom. Ako želite da zamenite neki od njih, " +
+                    "pozovite naš call centar i dogovorite se sa operaterom. Takođe, imate opciju popusta od 10% prilikom sledeće kupovine. " +
+                    "Popust možete aktivirati klikom na link u ovom obaveštenju i važi nedelju dana. U jednom trenutku možete aktivirati samo jedan popust.",
+                    Title = "Niste zadovoljni kupljenim proizvodima?",
+                    Date = DateTime.Now.Date,
+                    Tag = "lose_ocene",
+                    Read = false,
+                    User = new MongoDB.Driver.MongoDBRef("users", user.Id)
+                };
+
+                tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "lose_ocene");
+            }
         }
 
         [Authorize(Roles = "Admin")]

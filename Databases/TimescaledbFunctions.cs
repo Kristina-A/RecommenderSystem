@@ -13,13 +13,10 @@ namespace Databases
     {
         NpgsqlConnection conn;
         NpgsqlDataAdapter da;
-        DataSet ds;
         DataTable dt;
 
         public TimescaledbFunctions()
         {
-            ds = new DataSet();
-            dt = new DataTable();
             string connstring = String.Format("Server={0};Port={1};" +
                     "User Id={2};Password={3};Database={4};",
                     "localhost", "5432", "postgres",
@@ -92,21 +89,18 @@ namespace Databases
 
         public void SendNotification(string userID, string notID, string tag)
         {
-            if (!tag.Equals("do_popusta") || (tag.Equals("do_popusta") && !NotificationSent(userID)))
-            {
-                NpgsqlCommand cmd = new NpgsqlCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "insert into notifications values (@t,@u,@n,@tag)";
-                cmd.CommandType = CommandType.Text;
-                cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now));
-                cmd.Parameters.Add(new NpgsqlParameter("@u", userID));
-                cmd.Parameters.Add(new NpgsqlParameter("@n", notID));
-                cmd.Parameters.Add(new NpgsqlParameter("@tag", tag));
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "insert into notifications values (@t,@u,@n,@tag)";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now));
+            cmd.Parameters.Add(new NpgsqlParameter("@u", userID));
+            cmd.Parameters.Add(new NpgsqlParameter("@n", notID));
+            cmd.Parameters.Add(new NpgsqlParameter("@tag", tag));
 
-                cmd.ExecuteNonQuery();
-                cmd.Dispose();
-                conn.Close();
-            }
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            conn.Close();
         }
 
         public List<string> GetNotifications(string userID)
@@ -117,8 +111,8 @@ namespace Databases
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
             cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddDays(-7)));
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
             conn.Close();
@@ -132,16 +126,16 @@ namespace Databases
             return notifications;
         }
 
-        public bool NotificationSent(string userID)//za notifikacije koje jednom nedeljno obavestavaju za mali iznos do popusta
+        public bool NotificationSent(string userID)//provera za notifikacije koje jednom nedeljno obavestavaju za mali iznos do popusta
         {
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "select * from notifications where userid=@id and time>=@t and tag='do_popusta'";
+            cmd.CommandText = "select * from notifications where userid=@id and time>@t and tag='do_popusta'";
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
             cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddDays(-7)));
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
             conn.Close();
@@ -156,34 +150,107 @@ namespace Databases
         {
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "select sum(price) as total from boughtproducts where userid=@id and time>=@t";
+            cmd.CommandText ="select last(time,time) from notifications where userid=@id and (tag='popust' or tag='iskorisceno')"; // ako je vec dobio popust, gleda se od dobijenog na dalje u toku mesec dana
             cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
-            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));           
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+
+            if (dt.Rows[0]["last"].GetType() !=typeof(System.DBNull))
+            {
+                cmd.CommandText = "select sum(price) as total from boughtproducts where userid=@id and time>@t and time>@tn";
+                cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tn", dt.Rows[0]["last"]));
+            }
+            else
+            {
+                cmd.CommandText = "select sum(price) as total from boughtproducts where userid=@id and time>@t";
+                cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
+            }
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
             conn.Close();
 
-            return ((double)dt.Rows[0]["total"]);
+            if (dt.Rows[0]["total"].GetType() == typeof(System.DBNull))
+                return 0;
+            else
+                return ((double)dt.Rows[0]["total"]);
         }
 
-        public int LowGrades(string userID)// koliko ocena manjih od 3 u poslednjih mesec dana, dodati join za boughtproducts
+        public int LowGrades(string userID)// koliko ocena manjih od 3 u poslednjih mesec dana, samo za kupljene proizvode (kupljeni max pre 2 meseca)
         {
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "select count(grade) as grades from reviewedproducts where userid=@id and time>=@t and grade<3";
+            cmd.CommandText = "select last(time,time) from notifications where userid=@id and tag='lose_ocene'";           
             cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
-            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
-            NpgsqlDataAdapter da = new NpgsqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));          
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+
+            if(dt.Rows[0]["last"].GetType() != typeof(System.DBNull))
+            {
+                cmd.CommandText = "select count(grade) as grades from (select distinct(reviewedproducts.productid), grade" +
+                    " from reviewedproducts inner join boughtproducts on " +
+                    "(reviewedproducts.userid=boughtproducts.userid and reviewedproducts.productid=boughtproducts.productid) " +
+                    "where reviewedproducts.userid=@id and reviewedproducts.time>@t and reviewedproducts.time>@tn" +
+                    " and grade<3 and boughtproducts.time>@tb) as subgrades";
+                cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tb", DateTime.Now.AddMonths(-2)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tn", dt.Rows[0]["last"]));
+            }
+            else
+            {
+                cmd.CommandText = "select count(grade) as grades from (select distinct(reviewedproducts.productid), grade" +
+                    " from reviewedproducts inner join boughtproducts on " +
+                    "(reviewedproducts.userid=boughtproducts.userid and reviewedproducts.productid=boughtproducts.productid) " +
+                    "where reviewedproducts.userid=@id and reviewedproducts.time>@t and grade<3 and boughtproducts.time>@tb) as subgrades";
+                cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tb", DateTime.Now.AddMonths(-2)));
+            }
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
             conn.Close();
 
-            return ((int)dt.Rows[0]["grades"]);
+
+            if (dt.Rows[0]["grades"].GetType() == typeof(System.DBNull))
+                return 0;
+            else
+                return (int.Parse(dt.Rows[0]["grades"].ToString()));
+        }
+
+        public void UpdateNotification(string userID, string notID, string tag)
+        {
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "update notifications set tag=@tag where userid=@id and notificationid=@nid";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
+            cmd.Parameters.Add(new NpgsqlParameter("@tag", tag));
+            cmd.Parameters.Add(new NpgsqlParameter("@nid", notID));
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            conn.Close();
+        }
+
+        public void UpdateReview(string userID, string prodID, int grade)
+        {
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "update reviewedproducts set time=@t, grade=@grade where userid=@id and productid=@pid";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
+            cmd.Parameters.Add(new NpgsqlParameter("@grade", grade));
+            cmd.Parameters.Add(new NpgsqlParameter("@pid", prodID));
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now));
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            conn.Close();
         }
     }
 }
