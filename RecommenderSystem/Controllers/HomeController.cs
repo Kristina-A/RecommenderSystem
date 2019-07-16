@@ -10,28 +10,32 @@ namespace RecommenderSystem.Controllers
 {
     public class HomeController : Controller
     {
-        [Authorize(Roles ="User")]
         public ActionResult Index()
         {
-            MongodbFunctions mongo = new MongodbFunctions();
-            TimescaledbFunctions tdb = new TimescaledbFunctions();
-
-            Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
-
-            if(!tdb.NotificationSent(user.Id.ToString()) && (30000-tdb.MonthShopping(user.Id.ToString()))<3000)
+            if (User.Identity.IsAuthenticated)
             {
-                Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
-                {
-                    Content = "Poštovani, do ostvarivanja popusta od 20% ostalo Vam je manje od 3000 dinara.",
-                    Title = "Mali iznos do popusta",
-                    Date = DateTime.Now.Date,
-                    Tag = "do_popusta",
-                    Read = false,
-                    User = new MongoDB.Driver.MongoDBRef("users", user.Id)
-                };
+                MongodbFunctions mongo = new MongodbFunctions();
+                TimescaledbFunctions tdb = new TimescaledbFunctions();
 
-                
-                tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "do_popusta");
+                Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+
+                if (!tdb.NotificationSent(user.Id.ToString()) && (30000 - tdb.MonthShopping(user.Id.ToString())) < 3000)
+                {
+                    Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
+                    {
+                        Content = "Poštovani, do ostvarivanja popusta od 20% ostalo Vam je manje od 3000 dinara.",
+                        Title = "Mali iznos do popusta",
+                        Date = DateTime.Now.Date,
+                        Tag = "do_popusta",
+                        Read = false,
+                        User = new MongoDB.Driver.MongoDBRef("users", user.Id)
+                    };
+
+
+                    tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "do_popusta");
+                }
+
+                tdb.CloseConnection();
             }
             return View();
         }

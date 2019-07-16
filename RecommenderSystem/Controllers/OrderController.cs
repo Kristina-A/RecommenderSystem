@@ -15,6 +15,7 @@ namespace RecommenderSystem.Controllers
         public ActionResult Checkout()
         {
             MongodbFunctions mongo = new MongodbFunctions();
+            TimescaledbFunctions tdb = new TimescaledbFunctions();
 
             Databases.DomainModel.CheckoutDetails details = new Databases.DomainModel.CheckoutDetails();
 
@@ -22,6 +23,8 @@ namespace RecommenderSystem.Controllers
             Databases.DomainModel.Order order = mongo.GetOpenOrder(user.Id);
             details.User = user;
             List<Databases.DomainModel.Product> products = new List<Databases.DomainModel.Product>();
+            List<Databases.DomainModel.Notification> discounts = new List<Databases.DomainModel.Notification>();
+            List<string> disc = tdb.GetDiscounts(user.Id.ToString());
 
             if (order != null)
             {
@@ -30,8 +33,19 @@ namespace RecommenderSystem.Controllers
                     Databases.DomainModel.Product product = mongo.GetProduct(new ObjectId(r.Id.ToString()));
                     products.Add(product);
                 }
+
+                if(disc.Count!=0)
+                {
+                    foreach(string d in disc)
+                    {
+                        Databases.DomainModel.Notification notification = mongo.GetNotification(new ObjectId(d));
+                        discounts.Add(notification);
+                    }
+                }
             }
             details.Products = products;
+            details.Discounts = discounts;
+            tdb.CloseConnection();
 
             return View(details);
         }
@@ -96,9 +110,12 @@ namespace RecommenderSystem.Controllers
         public void SubmitOrder(string address, string note, string pay)
         {
             MongodbFunctions mongo = new MongodbFunctions();
+            TimescaledbFunctions tdb = new TimescaledbFunctions();
 
             Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
             Databases.DomainModel.Order order = mongo.GetOpenOrder(user.Id);
+
+            List<string> disc = tdb.GetDiscounts(user.Id.ToString());
 
             if (!user.Address.Contains(address))
             {
@@ -112,14 +129,29 @@ namespace RecommenderSystem.Controllers
 
             mongo.CloseOrder(order);
 
-            TimescaledbFunctions tdb = new TimescaledbFunctions();
-            //foreach(MongoDBRef p in order.Products)
-            //{
-            //    Databases.DomainModel.Product prod = mongo.GetProduct(new ObjectId(p.ToString()));
-            //    tdb.BuyProduct(user.Id.ToString(), prod.Id.ToString(), prod.Price);
-            //}
+            foreach(string d in disc)
+            {
+                Databases.DomainModel.Notification notification = mongo.GetNotification(new ObjectId(d));
 
-            if (!tdb.NotificationSent(user.Id.ToString()) && (30000 - tdb.MonthShopping(user.Id.ToString())) < 3000)//notifikacija do popusta
+                if(notification.Tag.Equals("popust"))
+                {
+                    mongo.UpdateNotification(notification.Id, "iskorisceno");
+                    tdb.UpdateNotification(user.Id.ToString(), d, "iskorisceno");
+                }
+                else if(notification.Tag.Equals("l_popust"))
+                {
+                    mongo.UpdateNotification(notification.Id, "l_iskorisceno");
+                    tdb.UpdateNotification(user.Id.ToString(), d, "l_iskorisceno");
+                }
+            }
+
+            foreach (MongoDBRef p in order.Products)
+            {
+                Databases.DomainModel.Product prod = mongo.GetProduct(new ObjectId(p.Id.ToString()));
+                tdb.BuyProduct(user.Id.ToString(), prod.Id.ToString(), prod.Price);
+            }
+
+            if (!tdb.NotificationSent(user.Id.ToString()) && (30000 - tdb.MonthShopping(user.Id.ToString())) < 3000 && (30000 - tdb.MonthShopping(user.Id.ToString())) >0)//notifikacija do popusta
             {
                 Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
                 {
@@ -148,6 +180,8 @@ namespace RecommenderSystem.Controllers
 
                 tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "popust");
             }
+
+            tdb.CloseConnection();
         }
 
         [HttpPost]

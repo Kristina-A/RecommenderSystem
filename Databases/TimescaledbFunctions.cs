@@ -25,6 +25,11 @@ namespace Databases
             conn.Open();
         }
 
+        public void CloseConnection()
+        {
+            conn.Close();
+        }
+
         public void ViewProduct(string userID, string prodID)
         {
             NpgsqlCommand cmd = new NpgsqlCommand();
@@ -37,7 +42,6 @@ namespace Databases
 
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
         }
 
         public void BuyProduct(string userID, string prodID, double price)
@@ -53,7 +57,6 @@ namespace Databases
 
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
         }
 
         public void ReviewProduct(string userID, string prodID, int grade)
@@ -69,7 +72,6 @@ namespace Databases
 
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
         }
 
         public void SeeReviews(string userID, string prodID)
@@ -84,7 +86,6 @@ namespace Databases
 
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
         }
 
         public void SendNotification(string userID, string notID, string tag)
@@ -100,7 +101,6 @@ namespace Databases
 
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
         }
 
         public List<string> GetNotifications(string userID)
@@ -115,7 +115,6 @@ namespace Databases
             dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
-            conn.Close();
 
             List<string> notifications = new List<string>();
             foreach (DataRow dr in dt.Rows)
@@ -138,7 +137,6 @@ namespace Databases
             dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
-            conn.Close();
 
             if (dt.Rows.Count > 0)
                 return true;
@@ -172,7 +170,6 @@ namespace Databases
             dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
-            conn.Close();
 
             if (dt.Rows[0]["total"].GetType() == typeof(System.DBNull))
                 return 0;
@@ -215,27 +212,22 @@ namespace Databases
             dt = new DataTable();
             da.Fill(dt);
             cmd.Dispose();
-            conn.Close();
 
-
-            if (dt.Rows[0]["grades"].GetType() == typeof(System.DBNull))
-                return 0;
-            else
-                return (int.Parse(dt.Rows[0]["grades"].ToString()));
+            return (int.Parse(dt.Rows[0]["grades"].ToString()));
         }
 
         public void UpdateNotification(string userID, string notID, string tag)
         {
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "update notifications set tag=@tag where userid=@id and notificationid=@nid";
+            cmd.CommandText = "update notifications set time=@t, tag=@tag where userid=@id and notificationid=@nid";
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
             cmd.Parameters.Add(new NpgsqlParameter("@tag", tag));
             cmd.Parameters.Add(new NpgsqlParameter("@nid", notID));
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now));
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
         }
 
         public void UpdateReview(string userID, string prodID, int grade)
@@ -250,7 +242,29 @@ namespace Databases
             cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now));
             cmd.ExecuteNonQuery();
             cmd.Dispose();
-            conn.Close();
+        }
+
+        public List<string> GetDiscounts(string userID)
+        {
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select notificationid from notifications where userid=@id and time>@t and (tag='popust' or tag='l_popust')";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddDays(-7)));
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+            cmd.Dispose();
+
+            List<string> discounts = new List<string>();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                discounts.Add(dr["notificationid"].ToString());
+            }
+
+            return discounts;
         }
     }
 }

@@ -35,14 +35,15 @@ namespace RecommenderSystem.Controllers
                     {
                         Id=not.Id.ToString(),
                         Title=not.Title,
-                        Date=not.Date.Date,
+                        Date=not.Date.Date.ToString("dd/MM/yyyy"),
                         Read=not.Read
                     };
                     nots.Add(nshow);
                 }
             }
+            tdb.CloseConnection();
 
-            return Json(new { number = count, alerts=nots },JsonRequestBehavior.AllowGet);
+            return Json(new { number = count, alerts=nots, total=notifications.Count },JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -64,6 +65,8 @@ namespace RecommenderSystem.Controllers
             };
 
             tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "l_popust");
+
+            tdb.CloseConnection();
         }
 
         [HttpPost]
@@ -76,6 +79,20 @@ namespace RecommenderSystem.Controllers
 
             mongo.UpdateNotification(new ObjectId(notId), tag);
             tdb.UpdateNotification(user.Id.ToString(), notId, tag);
+
+            tdb.CloseConnection();
+        }
+
+        [HttpPost]
+        public JsonResult ReadNotification(string notId)
+        {
+            MongodbFunctions mongo = new MongodbFunctions();
+
+            Databases.DomainModel.Notification notification = mongo.GetNotification(new ObjectId(notId));
+
+            mongo.UpdateNotificationStatus(new ObjectId(notId));
+
+            return Json(new {date=notification.Date.ToString("dd/MM/yyyy"), content=notification.Content, tag=notification.Tag }, JsonRequestBehavior.AllowGet);
         }
     }
 }

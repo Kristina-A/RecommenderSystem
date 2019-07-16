@@ -10,7 +10,7 @@ namespace Databases.DomainModel
     {
         public string Id { get; set; }
         public string Title { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public bool Read { get; set; }
     }
 }

@@ -269,6 +269,8 @@ namespace RecommenderSystem.Controllers
 
                 tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "lose_ocene");
             }
+
+            tdb.CloseConnection();
         }
 
         [Authorize(Roles = "Admin")]

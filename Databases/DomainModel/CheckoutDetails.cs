@@ -10,10 +10,12 @@ namespace Databases.DomainModel
     {
         public User User { get; set; }
         public List<Product> Products { get; set; }
+        public List<Notification> Discounts { get; set; }
 
         public CheckoutDetails()
         {
             Products = new List<Product>();
+            Discounts = new List<Notification>();
         }
     }
 }
