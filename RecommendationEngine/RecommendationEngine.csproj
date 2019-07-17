@@ -41,8 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Interfaces\IComparer.cs" />
+    <Compile Include="Interfaces\IRater.cs" />
+    <Compile Include="Objects\ProductCategoryCount.cs" />
+    <Compile Include="Objects\Suggestion.cs" />
+    <Compile Include="Objects\UserAction.cs" />
+    <Compile Include="Objects\UserProductRatings.cs" />
+    <Compile Include="Parsers\UserBehaviorDatabase.cs" />
+    <Compile Include="Interfaces\IRecommender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Objects\UserProductRatingsTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Databases\Databases.csproj">
@@ -50,5 +58,6 @@
       <Name>Databases</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
