@@ -365,6 +365,10 @@
       <Project>{bbea5d1f-1a0c-487d-8d51-77af44452466}</Project>
       <Name>Databases</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RecommendationEngine\RecommendationEngine.csproj">
+      <Project>{c9402a65-9bc3-414e-ad7b-0ea720b7e426}</Project>
+      <Name>RecommendationEngine</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

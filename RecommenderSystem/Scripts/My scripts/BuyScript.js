@@ -89,8 +89,21 @@ $(document).ready(function () {
                 if (tag == "lose_ocene") {
                     var par = document.getElementById("discountActivation");
                     var link = document.createElement("a");
-                    link.setAttribute("href", "/Notifications/ActivateDiscount");
+                    link.setAttribute("href", "#");
                     link.innerHTML = "Aktivirajte popust od 10%";
+                    link.addEventListener("click", function () {
+                        $.ajax({
+                            type: "POST",
+                            url: '/Notifications/ActivateDiscount',
+                            success: function (data) {
+                                if (data == false)
+                                    alert("Nije moguće aktivirati popust jer već imate jedan aktivan.");
+                            },
+                            error: function () {
+                                alert("fail");
+                            }
+                        });
+                    });
 
                     par.appendChild(link);
                 }

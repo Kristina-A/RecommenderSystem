@@ -47,40 +47,34 @@ namespace RecommenderSystem.Controllers
         }
 
         [HttpPost]
-        public void ActivateDiscount()
+        public bool ActivateDiscount()
         {
             MongodbFunctions mongo = new MongodbFunctions();
             Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+            bool sent=false;
 
             TimescaledbFunctions tdb = new TimescaledbFunctions();
 
-            Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
+            if (!tdb.ActivatedDiscount(user.Id.ToString()))
             {
-                Content = "Poštovani, ostvarili ste popust od 10% na sledeću kupovinu, koji možete iskoristiti u roku od nedelju dana.",
-                Title = "Popust 10%",
-                Date = DateTime.Now.Date,
-                Tag = "l_popust",
-                Read = false,
-                User = new MongoDB.Driver.MongoDBRef("users", user.Id)
-            };
 
-            tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "l_popust");
+                Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
+                {
+                    Content = "Poštovani, ostvarili ste popust od 10% na sledeću kupovinu, koji možete iskoristiti u roku od nedelju dana.",
+                    Title = "Popust 10%",
+                    Date = DateTime.Now.Date,
+                    Tag = "l_popust",
+                    Read = false,
+                    User = new MongoDB.Driver.MongoDBRef("users", user.Id)
+                };
 
-            tdb.CloseConnection();
-        }
+                tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "l_popust");
 
-        [HttpPost]
-        public void UseDiscount(string notId, string tag)
-        {
-            MongodbFunctions mongo = new MongodbFunctions();
-            Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
-
-            TimescaledbFunctions tdb = new TimescaledbFunctions();
-
-            mongo.UpdateNotification(new ObjectId(notId), tag);
-            tdb.UpdateNotification(user.Id.ToString(), notId, tag);
+                sent = true;
+            }
 
             tdb.CloseConnection();
+            return sent;
         }
 
         [HttpPost]

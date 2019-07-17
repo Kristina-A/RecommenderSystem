@@ -266,5 +266,24 @@ namespace Databases
 
             return discounts;
         }
+
+        public bool ActivatedDiscount(string userID)
+        {
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select notificationid from notifications where userid=@id and time>@t and tag='l_popust'";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddDays(-7)));
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+            cmd.Dispose();
+
+            if (dt.Rows.Count > 0)
+                return true;
+            else
+                return false;
+        }
     }
 }

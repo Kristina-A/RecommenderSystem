@@ -86,7 +86,7 @@
         <h4 class="text-center">Proizvodi</h4>
         <hr />
 
-        @{ var price = 0.0; var discount = 0.0; var ids="";}
+        @{ var price = 0.0; var discount = 0.0;}
         @foreach (var p in Model.Products)
         {
             <div class="form-group row">
@@ -107,13 +107,11 @@
             {
                 discount += 0.1;
             }
-
-            ids += " " + d.Id.ToString();
         }
         @{ price *= 1.0 - discount;}
         <div class="form-group row">
             <label class="col-sm-4 control-label">Ukupna cena: </label>
-            <label class="col-sm-4 @ids">@price din</label>
+            <label class="col-sm-4">@price din</label>
         </div>
     </div>
 </div>

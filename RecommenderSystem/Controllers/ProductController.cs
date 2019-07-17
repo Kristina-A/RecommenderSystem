@@ -245,7 +245,7 @@ namespace RecommenderSystem.Controllers
 
                 mongo.AddReview(newReview, id, User.Identity.Name);
 
-                //tdb.ReviewProduct(user.Id.ToString(), id, grade);
+                tdb.ReviewProduct(user.Id.ToString(), id, grade);
             }
             else
             {
