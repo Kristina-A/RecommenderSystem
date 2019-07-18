@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace RecommendationEngine.Objects
 {
     public class UserProductRatings
     {
-        public string UserID { get; set; }
+        public ObjectId UserID { get; set; }
 
         public double[] ProductRatings { get; set; }
 
         public double Score { get; set; }
 
-        public UserProductRatings(string userId, int articlesCount)
+        public UserProductRatings(ObjectId userId, int articlesCount)
         {
             UserID = userId;
             ProductRatings = new double[articlesCount];

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RecommendationEngine.Interfaces;
+using MongoDB.Bson;
 
 namespace RecommendationEngine.Objects
 {
@@ -11,15 +12,15 @@ namespace RecommendationEngine.Objects
     {
         public List<UserProductRatings> Users { get; set; }
 
-        public List<int> UserIndexToID { get; set; }
+        public List<ObjectId> UserIndexToID { get; set; }
 
-        public List<int> ProductIndexToID { get; set; }
+        public List<ObjectId> ProductIndexToID { get; set; }
 
         public UserProductRatingsTable()
         {
             Users = new List<UserProductRatings>();
-            UserIndexToID = new List<int>();
-            ProductIndexToID = new List<int>();
+            UserIndexToID = new List<ObjectId>();
+            ProductIndexToID = new List<ObjectId>();
         }
 
         public void AppendUserFeatures(double[][] userFeatures)
@@ -34,7 +35,7 @@ namespace RecommendationEngine.Objects
         {
             for (int f = 0; f < productFeatures[0].Length; f++)
             {
-                UserProductRatings newFeature = new UserProductRatings("", ProductIndexToID.Count);
+                UserProductRatings newFeature = new UserProductRatings(new ObjectId(), ProductIndexToID.Count);
 
                 for (int a = 0; a < ProductIndexToID.Count; a++)
                 {

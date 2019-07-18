@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace RecommendationEngine.Objects
 {
     public class Suggestion
     {
-        public string UserID { get; set; }
+        public ObjectId UserID { get; set; }
 
-        public string ArticleID { get; set; }
+        public ObjectId ProductID { get; set; }
 
         public double Rating { get; set; }
 
-        public Suggestion(string userId, string articleId, double assurance)
+        public Suggestion(ObjectId userId, ObjectId productId, double assurance)
         {
             UserID = userId;
-            ArticleID = articleId;
+            ProductID = productId;
             Rating = assurance;
         }
     }

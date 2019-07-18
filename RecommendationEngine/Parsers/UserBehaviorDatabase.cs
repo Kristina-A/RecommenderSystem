@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Databases;
 using RecommendationEngine.Objects;
 
-namespace RecommendationEngine
+namespace RecommendationEngine.Parsers
 {
     public class UserBehaviorDatabase
     {

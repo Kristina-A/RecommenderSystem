@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace RecommendationEngine.Objects
 {
@@ -10,15 +11,15 @@ namespace RecommendationEngine.Objects
     {
         public string Action { get; set; }
 
-        public string UserID { get; set; }
+        public ObjectId UserID { get; set; }
 
-        public string ArticleID { get; set; }
+        public ObjectId ProductID { get; set; }
 
-        public UserAction(string action, string userid, string articleid)
+        public UserAction(string action, ObjectId userid, ObjectId productid)
         {
             Action = action;
             UserID = userid;
-            ArticleID = articleid;
+            ProductID = productid;
         }
 
         //public override string ToString()

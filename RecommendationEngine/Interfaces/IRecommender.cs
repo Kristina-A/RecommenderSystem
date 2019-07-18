@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RecommendationEngine.Objects;
+using RecommendationEngine.Parsers;
+using MongoDB.Bson;
 
 namespace RecommendationEngine.Interfaces
 {
@@ -11,8 +13,8 @@ namespace RecommendationEngine.Interfaces
     {
         void Train(UserBehaviorDatabase db);
 
-        List<Suggestion> GetSuggestions(int userId, int numSuggestions);
+        List<Suggestion> GetSuggestions(ObjectId userId, int numSuggestions);
 
-        double GetRating(int userId, int productId);
+        double GetRating(ObjectId userId, ObjectId productId);
     }
 }
