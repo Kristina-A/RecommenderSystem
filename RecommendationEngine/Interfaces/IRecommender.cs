@@ -15,6 +15,6 @@ namespace RecommendationEngine.Interfaces
 
         List<Suggestion> GetSuggestions(ObjectId userId, int numSuggestions);
 
-        double GetRating(ObjectId userId, ObjectId productId);
+        double GetRating(ObjectId userId, ObjectId productId);//predikcija da li ce korisniku da se svidja preporucen proizvod
     }
 }

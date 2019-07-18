@@ -13,10 +13,10 @@ namespace RecommendationEngine.Objects
 
         public double[] CategoryCounts { get; set; }
 
-        public ProductCategoryCount(ObjectId ProductId, int numCategorys)
+        public ProductCategoryCount(ObjectId ProductId, int numCategories)
         {
             ProductID = ProductId;
-            CategoryCounts = new double[numCategorys];
+            CategoryCounts = new double[numCategories];
         }
     }
 }

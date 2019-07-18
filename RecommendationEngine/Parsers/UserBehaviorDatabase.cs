@@ -10,7 +10,7 @@ namespace RecommendationEngine.Parsers
 {
     public class UserBehaviorDatabase
     {
-        public List<Databases.DomainModel.Category> Categories { get; set; }
+        public List<string> Categories { get; set; }
 
         public List<Databases.DomainModel.Product> Products { get; set; }
 

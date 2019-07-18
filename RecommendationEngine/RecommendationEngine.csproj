@@ -72,6 +72,8 @@
     <Compile Include="Parsers\UserBehaviorTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Objects\UserProductRatingsTable.cs" />
+    <Compile Include="Recommenders\ItemCollaborativeFilterRecommender.cs" />
+    <Compile Include="Recommenders\UserCollaborativeFilterRecommender.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Databases\Databases.csproj">

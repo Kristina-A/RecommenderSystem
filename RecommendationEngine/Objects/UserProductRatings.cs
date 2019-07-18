@@ -15,10 +15,10 @@ namespace RecommendationEngine.Objects
 
         public double Score { get; set; }
 
-        public UserProductRatings(ObjectId userId, int articlesCount)
+        public UserProductRatings(ObjectId userId, int productsCount)
         {
             UserID = userId;
-            ProductRatings = new double[articlesCount];
+            ProductRatings = new double[productsCount];
         }
 
         public void AppendRatings(double[] ratings)

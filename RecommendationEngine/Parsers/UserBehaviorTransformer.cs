@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RecommendationEngine.Objects;
 using RecommendationEngine.Interfaces;
 using MongoDB.Bson;
+using Databases;
 
 namespace RecommendationEngine.Parsers
 {
@@ -18,7 +19,10 @@ namespace RecommendationEngine.Parsers
             db = database;
         }
 
-        public UserProductRatingsTable GetUserArticleRatingsTable(IRater rater)
+        /// <summary>
+        /// Get a list of all users and their ratings on every article
+        /// </summary>
+        public UserProductRatingsTable GetUserProductRatingsTable(IRater rater)
         {
             UserProductRatingsTable table = new UserProductRatingsTable();
 
@@ -32,20 +36,42 @@ namespace RecommendationEngine.Parsers
                 table.Users.Add(new UserProductRatings(userId, table.ProductIndexToID.Count));
             }
 
-            var userArticleRatingGroup = db.UserActions
+            var userProductRatingGroup = db.UserActions
                 .GroupBy(x => new { x.UserID, x.ProductID })
                 .Select(g => new { g.Key.UserID, g.Key.ProductID, Rating = rater.GetRating(g.ToList()) })
                 .ToList();
 
-            foreach (var userAction in userArticleRatingGroup)
+            foreach (var userAction in userProductRatingGroup)
             {
                 int userIndex = table.UserIndexToID.IndexOf(userAction.UserID);
-                int articleIndex = table.ProductIndexToID.IndexOf(userAction.ProductID);
+                int productIndex = table.ProductIndexToID.IndexOf(userAction.ProductID);
 
-                table.Users[userIndex].ProductRatings[articleIndex] = userAction.Rating;
+                table.Users[userIndex].ProductRatings[productIndex] = userAction.Rating;
             }
 
             return table;
+        }
+
+        /// <summary>
+        /// Get a table of all articles as rows and all tags as columns
+        /// </summary>
+        public List<ProductCategoryCount> GetProductCategoryCounts()
+        {
+            List<ProductCategoryCount> productCategories = new List<ProductCategoryCount>();
+
+            foreach (Databases.DomainModel.Product product in db.Products)
+            {
+                ProductCategoryCount prodCategory = new ProductCategoryCount(product.Id, db.Categories.Count);
+
+                for (int category = 0; category < db.Categories.Count; category++)
+                {
+                    prodCategory.CategoryCounts[category] = product.Subcategory.Equals(db.Categories[category]) ? 1.0 : 0.0;
+                }
+
+                productCategories.Add(prodCategory);
+            }
+
+            return productCategories;
         }
     }
 }
