@@ -64,6 +64,7 @@
     <Compile Include="Interfaces\IComparer.cs" />
     <Compile Include="Interfaces\IRater.cs" />
     <Compile Include="Objects\ProductCategoryCount.cs" />
+    <Compile Include="Objects\ProductRating.cs" />
     <Compile Include="Objects\Suggestion.cs" />
     <Compile Include="Objects\UserAction.cs" />
     <Compile Include="Objects\UserProductRatings.cs" />

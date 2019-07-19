@@ -49,7 +49,27 @@ namespace RecommendationEngine.Recommenders
 
         public List<Suggestion> GetSuggestions(ObjectId userId, int numSuggestions)
         {
-            throw new NotImplementedException();
+            int userIndex = ratings.UserIndexToID.IndexOf(userId);
+            List<int> products = GetHighestRatedProductsForUser(userIndex).Take(5).ToList();
+            List<Suggestion> suggestions = new List<Suggestion>();
+
+            foreach (int productIndex in products)
+            {
+                ObjectId productId = ratings.ProductIndexToID[productIndex];
+                List<ProductRating> neighboringProducts = GetNearestNeighbors(productId, neighborCount);
+
+                foreach (ProductRating neighbor in neighboringProducts)
+                {
+                    int neighborProductIndex = ratings.ProductIndexToID.IndexOf(neighbor.ProductID);
+                    var nonZeroRatings = transposedRatings[neighborProductIndex].Where(x => x != 0);
+                    double averageProductRating = nonZeroRatings.Count() > 0 ? nonZeroRatings.Average() : 0;
+
+                    suggestions.Add(new Suggestion(userId, neighbor.ProductID, averageProductRating));
+                }
+            }
+
+            suggestions.Sort((c, n) => n.Rating.CompareTo(c.Rating));
+            return suggestions.Take(numSuggestions).ToList();
         }
 
         public void Train(UserBehaviorDatabase db)
@@ -61,6 +81,44 @@ namespace RecommendationEngine.Recommenders
             ratings.AppendProductFeatures(articleTags);
 
             FillTransposedRatings();
+        }
+
+        private List<int> GetHighestRatedProductsForUser(int userIndex)
+        {
+            List<Tuple<int, double>> items = new List<Tuple<int, double>>();
+
+            for (int productIndex = 0; productIndex < ratings.ProductIndexToID.Count; productIndex++)
+            {
+                // Create a list of every article this user has viewed
+                if (ratings.Users[userIndex].ProductRatings[productIndex] != 0)
+                {
+                    items.Add(new Tuple<int, double>(productIndex, ratings.Users[userIndex].ProductRatings[productIndex]));
+                }
+            }
+
+            // Sort the articles by rating
+            items.Sort((c, n) => n.Item2.CompareTo(c.Item2));
+
+            return items.Select(x => x.Item1).ToList();
+        }
+
+        private List<ProductRating> GetNearestNeighbors(ObjectId productId, int numArticles)
+        {
+            List<ProductRating> neighbors = new List<ProductRating>();
+            int mainProductIndex = ratings.ProductIndexToID.IndexOf(productId);
+
+            for (int productIndex = 0; productIndex < ratings.ProductIndexToID.Count; productIndex++)
+            {
+                ObjectId searchProductId = ratings.ProductIndexToID[productIndex];
+
+                double score = comparer.CompareVectors(transposedRatings[mainProductIndex], transposedRatings[productIndex]);
+
+                neighbors.Add(new ProductRating(searchProductId, score));
+            }
+
+            neighbors.Sort((c, n) => n.Rating.CompareTo(c.Rating));
+
+            return neighbors.Take(numArticles).ToList();
         }
     }
 }
