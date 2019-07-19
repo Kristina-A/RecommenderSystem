@@ -61,8 +61,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CosineComparer.cs" />
     <Compile Include="Interfaces\IComparer.cs" />
     <Compile Include="Interfaces\IRater.cs" />
+    <Compile Include="LinearRater.cs" />
     <Compile Include="Objects\ProductCategoryCount.cs" />
     <Compile Include="Objects\ProductRating.cs" />
     <Compile Include="Objects\Suggestion.cs" />
