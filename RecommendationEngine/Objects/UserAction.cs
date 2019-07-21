@@ -15,16 +15,14 @@ namespace RecommendationEngine.Objects
 
         public ObjectId ProductID { get; set; }
 
-        public UserAction(string action, ObjectId userid, ObjectId productid)
+        public double Rate { get; set; }
+
+        public UserAction(string action, ObjectId userid, ObjectId productid, double rate)
         {
             Action = action;
             UserID = userid;
             ProductID = productid;
+            Rate = rate;
         }
-
-        //public override string ToString()
-        //{
-        //    return Day + "," + Action + "," + UserID + "," + UserName + "," + ArticleID + "," + ArticleName;
-        //}
     }
 }
