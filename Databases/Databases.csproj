@@ -92,6 +92,7 @@
     <Compile Include="DomainModel\Order.cs" />
     <Compile Include="DomainModel\Product.cs" />
     <Compile Include="DomainModel\ProductShow.cs" />
+    <Compile Include="DomainModel\RecommenderAction.cs" />
     <Compile Include="DomainModel\Review.cs" />
     <Compile Include="DomainModel\ReviewShow.cs" />
     <Compile Include="DomainModel\User.cs" />

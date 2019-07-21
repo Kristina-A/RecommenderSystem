@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Npgsql;
 using NpgsqlTypes;
 using System.Data;
+using MongoDB.Bson;
 
 namespace Databases
 {
@@ -284,6 +285,77 @@ namespace Databases
                 return true;
             else
                 return false;
+        }
+
+        public List<DomainModel.RecommenderAction> GetMonthlyActivities()
+        {
+            List<DomainModel.RecommenderAction> actions = new List<DomainModel.RecommenderAction>();
+
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select userid, productid from viewedproducts where time>@t";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+
+            foreach(DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "View";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.CommandText = "select userid, productid, grade from reviewedproducts where time>@t";
+            dt.Clear();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "Review";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+                action.Grade = int.Parse(dr["grade"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.CommandText = "select userid, productid from boughtproducts where time>@t";
+            dt.Clear();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "Buy";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.CommandText = "select userid, productid from seenreviews where time>@t";
+            dt.Clear();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "SeeReviews";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.Dispose();
+
+            return actions;
         }
     }
 }
