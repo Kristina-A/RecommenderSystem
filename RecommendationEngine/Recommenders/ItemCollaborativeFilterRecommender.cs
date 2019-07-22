@@ -42,10 +42,6 @@ namespace RecommendationEngine.Recommenders
                 }
             }
         }
-        public double GetRating(ObjectId userId, ObjectId productId)
-        {
-            throw new NotImplementedException();
-        }
 
         public List<Suggestion> GetSuggestions(ObjectId userId, int numSuggestions)
         {

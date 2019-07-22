@@ -413,5 +413,32 @@ namespace Databases
 
             reviewsCollection.UpdateOne(filter, update);
         }
+
+        public List<User> GetUsers()
+        {
+            var usersCollection = db.GetCollection<User>("users");
+
+            return usersCollection.Find(Builders<User>.Filter.Empty).ToList();
+        }
+
+        public List<Product> GetProducts()
+        {
+            var productsCollection = db.GetCollection<Product>("products");
+
+            return productsCollection.Find(Builders<Product>.Filter.Empty).ToList();
+        }
+
+        public List<string> GetCategories()
+        {
+            List<string> subcategories = new List<string>();
+            var categoriesCollection = db.GetCollection<Category>("categories");
+
+            List<Category> categories= categoriesCollection.Find(Builders<Category>.Filter.Empty).ToList();
+
+            foreach (Category c in categories)
+                subcategories.AddRange(c.Subcategories);
+
+            return subcategories;
+        }
     }
 }

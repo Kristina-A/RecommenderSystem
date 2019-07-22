@@ -287,7 +287,7 @@ namespace Databases
                 return false;
         }
 
-        public List<DomainModel.RecommenderAction> GetMonthlyActivities()
+        public List<DomainModel.RecommenderAction> GetMonthlyActivities(int months)
         {
             List<DomainModel.RecommenderAction> actions = new List<DomainModel.RecommenderAction>();
 
@@ -295,7 +295,7 @@ namespace Databases
             cmd.Connection = conn;
             cmd.CommandText = "select userid, productid from viewedproducts where time>@t";
             cmd.CommandType = CommandType.Text;
-            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1)));
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddMonths(-1*months)));
             da = new NpgsqlDataAdapter(cmd);
             dt = new DataTable();
             da.Fill(dt);
@@ -340,6 +340,102 @@ namespace Databases
             }
 
             cmd.CommandText = "select userid, productid from seenreviews where time>@t";
+            dt.Clear();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "SeeReviews";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.Dispose();
+
+            return actions;
+        }
+
+        public List<DomainModel.RecommenderAction> GetWeeklyActivities()
+        {
+            List<DomainModel.RecommenderAction> actions = new List<DomainModel.RecommenderAction>();
+
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select userid, productid from viewedproducts where time>@t union select userid, productid from viewedproducts where " +
+                "time>=@tp and time<=@tk";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddDays(-21)));
+            if (DateTime.Now.Month >= 3 && DateTime.Now.Month <= 5)
+            {
+                cmd.Parameters.Add(new NpgsqlParameter("@tp", new DateTime(DateTime.Now.Year - 1, 3, 1)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tk", new DateTime(DateTime.Now.Year - 1, 5, 31)));
+            }
+            else if(DateTime.Now.Month >= 6 && DateTime.Now.Month <= 8)
+            {
+                cmd.Parameters.Add(new NpgsqlParameter("@tp", new DateTime(DateTime.Now.Year - 1, 6, 1)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tk", new DateTime(DateTime.Now.Year - 1, 8, 31)));
+            }
+            else if(DateTime.Now.Month >= 9 && DateTime.Now.Month <= 11)
+            {
+                cmd.Parameters.Add(new NpgsqlParameter("@tp", new DateTime(DateTime.Now.Year - 1, 9, 1)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tk", new DateTime(DateTime.Now.Year - 1, 11, 30)));
+            }
+            else
+            {
+                cmd.Parameters.Add(new NpgsqlParameter("@tp", new DateTime(DateTime.Now.Year - 2, 12, 1)));
+                cmd.Parameters.Add(new NpgsqlParameter("@tk", new DateTime(DateTime.Now.Year - 1, 2, 28)));
+            }
+
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "View";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.CommandText = "select userid, productid, grade from reviewedproducts where time>@t union select userid, productid, grade from reviewedproducts where " +
+                "time>=@tp and time<=@tk";
+            dt.Clear();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "Review";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+                action.Grade = int.Parse(dr["grade"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.CommandText = "select userid, productid from boughtproducts where time>@t union select userid, productid from boughtproducts where " +
+                "time>=@tp and time<=@tk";
+            dt.Clear();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
+                action.Action = "Buy";
+                action.UserId = new ObjectId(dr["userid"].ToString());
+                action.ProductId = new ObjectId(dr["productid"].ToString());
+
+                actions.Add(action);
+            }
+
+            cmd.CommandText = "select userid, productid from seenreviews where time>@t union select userid, productid from seenreviews where " +
+                "time>=@tp and time<=@tk";
             dt.Clear();
             da.Fill(dt);
 

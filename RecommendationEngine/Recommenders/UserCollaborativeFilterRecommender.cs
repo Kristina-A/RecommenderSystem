@@ -25,12 +25,6 @@ namespace RecommendationEngine.Recommenders
             neighborCount = numberOfNeighbors;
         }
 
-
-        public double GetRating(ObjectId userId, ObjectId productId)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<Suggestion> GetSuggestions(ObjectId userId, int numSuggestions)
         {
             int userIndex = ratings.UserIndexToID.IndexOf(userId);
