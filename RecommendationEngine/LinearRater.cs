@@ -19,14 +19,14 @@ namespace RecommendationEngine
         {
             viewWeight = view;
             buyWeight = buy;
-            reviewWeight = 0.0;
-            seeReviewsWeight = 0.0;
         }
 
         public double GetRating(List<UserAction> actions)
         {
-            if (actions.Where(x=>x.Action=="Review").First()!=null)
+            if (actions.Count(x => x.Action == "Review") != 0)
                 reviewWeight = actions.Where(x => x.Action == "Review").First().Rate;//ocena kojom je ocenio, samo jednom moze da oceni
+            else
+                reviewWeight = 0.0;
 
             int view = actions.Count(x => x.Action == "View");
             int buy = actions.Count(x => x.Action == "Buy");
@@ -34,6 +34,8 @@ namespace RecommendationEngine
 
             if (seeRev != 0)
                 seeReviewsWeight = actions.Where(x => x.Action == "SeeReviews").First().Rate;//prosecna ocena svih reviewa
+            else
+                seeReviewsWeight = 0.0;
 
             double rating = view * viewWeight + buy * buyWeight + reviewWeight + seeRev * seeReviewsWeight;
 

@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainModel\AdminResponse.cs" />
+    <Compile Include="DomainModel\Advert.cs" />
     <Compile Include="DomainModel\Category.cs" />
     <Compile Include="DomainModel\CheckoutDetails.cs" />
     <Compile Include="DomainModel\Message.cs" />

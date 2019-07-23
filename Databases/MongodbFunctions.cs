@@ -418,7 +418,7 @@ namespace Databases
         {
             var usersCollection = db.GetCollection<User>("users");
 
-            var filter = Builders<User>.Filter.Not(Builders<User>.Filter.Eq("Name", "Admin"));
+            var filter = Builders<User>.Filter.Ne("Name", "Admin");
 
             return usersCollection.Find(filter).ToList();
         }

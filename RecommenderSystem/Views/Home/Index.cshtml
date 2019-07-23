@@ -8,80 +8,82 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <div class="col-3">
-        <div id="categories" class="bg-dark" style="color: white; width: inherit; padding-left: 10px; height: 100%;">
-            <br />
-            <p><i class="fas fa-book-open"></i>  Kategorije:</p>
-            <hr />
-            <ul id="myUL">
-                <li>
-                    <span class="caret">Mobilni uređaji</span>
-                    <ul class="nested">
-                        <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Laptopovi i tableti" })" style="text-decoration: none; color: white;"> Laptopovi i tableti</a></li>
-                        <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Mobilni telefoni" })" style="text-decoration: none; color: white;"> Mobilni telefoni</a></li>
-                    </ul>
-                </li>
+    <div class="row" style="margin-left: 3px;">
+        <div class="col-3">
+            <div id="categories" class="bg-dark" style="color: white; width: inherit; padding-left: 10px; height: 100%;">
+                <br />
+                <p><i class="fas fa-book-open"></i>  Kategorije:</p>
                 <hr />
-                <li>
-                    <span class="caret">Računari</span>
-                    <ul class="nested">
-                        <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Gotove konfiguracije" })" style="text-decoration: none; color: white;"> Gotove konfiguracije</a></li>
-                        <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Racunarske komponente" })" style="text-decoration: none; color: white;"> Računarske komponente</a></li>
-                    </ul>
-                </li>
-                <hr />
-                <li>
-                    <span class="caret">Tv, audio, foto, video</span>
-                    <ul class="nested">
-                        <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "TV i audio" })" style="text-decoration: none; color: white;"> Tv i audio</a></li>
-                        <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Foto i video" })" style="text-decoration: none; color: white;"> Foto i video</a></li>
-                    </ul>
-                </li>
-                <hr />
-                <li>
-                    <span class="caret">Monitori, periferije, konzole</span>
-                    <ul class="nested">
-                        <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Monitori i periferije" })" style="text-decoration: none; color: white;"> Monitori i periferije</a></li>
-                        <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Stampaci" })" style="text-decoration: none; color: white;"> Štampači</a></li>
-                        <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Konzole" })" style="text-decoration: none; color: white;"> Konzole</a></li>
-                        <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Memorije" })" style="text-decoration: none; color: white;"> Memorije</a></li>
-                    </ul>
-                </li>
-                <hr />
-                <li>
-                    <span class="caret"><a href="@Url.Action("CategoryProducts", "Product", new { category = "Mrezna oprema" })" style="text-decoration: none; color: white;"> Mrežna oprema</a></span>
-                    <ul class="nested"></ul>
-                </li>
-                <hr />
-                <li>
-                    <span class="caret"><a href="@Url.Action("CategoryProducts", "Product", new { category = "Bela tehnika" })" style="text-decoration: none; color: white;"> Bela tehnika</a></span>
-                    <ul class="nested"></ul>
-                </li>
-            </ul>
+                <ul id="myUL">
+                    <li>
+                        <span class="caret">Mobilni uređaji</span>
+                        <ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Laptopovi i tableti" })" style="text-decoration: none; color: white;"> Laptopovi i tableti</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Mobilni telefoni" })" style="text-decoration: none; color: white;"> Mobilni telefoni</a></li>
+                        </ul>
+                    </li>
+                    <hr />
+                    <li>
+                        <span class="caret">Računari</span>
+                        <ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Gotove konfiguracije" })" style="text-decoration: none; color: white;"> Gotove konfiguracije</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Racunarske komponente" })" style="text-decoration: none; color: white;"> Računarske komponente</a></li>
+                        </ul>
+                    </li>
+                    <hr />
+                    <li>
+                        <span class="caret">Tv, audio, foto, video</span>
+                        <ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "TV i audio" })" style="text-decoration: none; color: white;"> Tv i audio</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Foto i video" })" style="text-decoration: none; color: white;"> Foto i video</a></li>
+                        </ul>
+                    </li>
+                    <hr />
+                    <li>
+                        <span class="caret">Monitori, periferije, konzole</span>
+                        <ul class="nested">
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Monitori i periferije" })" style="text-decoration: none; color: white;"> Monitori i periferije</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Stampaci" })" style="text-decoration: none; color: white;"> Štampači</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i><a href="@Url.Action("CategoryProducts", "Product", new { category = "Konzole" })" style="text-decoration: none; color: white;"> Konzole</a></li>
+                            <li><i class="fas fa-circle fa-xs"></i> <a href="@Url.Action("CategoryProducts", "Product", new { category = "Memorije" })" style="text-decoration: none; color: white;"> Memorije</a></li>
+                        </ul>
+                    </li>
+                    <hr />
+                    <li>
+                        <span class="caret"><a href="@Url.Action("CategoryProducts", "Product", new { category = "Mrezna oprema" })" style="text-decoration: none; color: white;"> Mrežna oprema</a></span>
+                        <ul class="nested"></ul>
+                    </li>
+                    <hr />
+                    <li>
+                        <span class="caret"><a href="@Url.Action("CategoryProducts", "Product", new { category = "Bela tehnika" })" style="text-decoration: none; color: white;"> Bela tehnika</a></span>
+                        <ul class="nested"></ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
 
-    <div class="col-9 d-flex flex-row flex-wrap" style="justify-content: space-between !important;">
-        @if (Model != null)
-        {
-            foreach (Databases.DomainModel.Product product in Model)
+        <div class="col-9 d-flex flex-row flex-wrap" style="justify-content: space-between !important;">
+            @if (Model != null)
             {
-                <div class="col-4" style="padding: 5px; padding-top: 0px;">
-                    <div style="border: 1px solid rgb(180,180,180);">
-                        <img class="card-img-top" src="~/Resources/@product.Picture" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">@product.Name</h5>
-                            <hr />
-                            <p class="card-text" style="font: bold; color: red;">Cena: @product.Price</p>
-                            <hr />
-                            <a href="../Product/ProductDetails/@product.Id" class="btn btn-dark" style="margin-left: 35px;">Pogledaj proizvod</a>
+                foreach (Databases.DomainModel.Product product in Model)
+                {
+                    <div class="col-4" style="padding: 5px; padding-top: 0px;">
+                        <div style="border: 1px solid rgb(180,180,180);">
+                            <img class="card-img-top" src="~/Resources/@product.Picture" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@product.Name</h5>
+                                <hr />
+                                <p class="card-text" style="font: bold; color: red;">Cena: @product.Price</p>
+                                <hr />
+                                <a href="../Product/ProductDetails/@product.Id" class="btn btn-dark" style="margin-left: 35px;">Pogledaj proizvod</a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
+                }
             }
-        }
 
+        </div>
     </div>
 }
 else
@@ -147,6 +149,6 @@ else
     </div>
 }
 
-@section scripts {
-    @Scripts.Render("~/Scripts/My scripts/HomePageScript.js")
-}
+        @section scripts {
+            @Scripts.Render("~/Scripts/My scripts/HomePageScript.js")
+        }

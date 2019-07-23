@@ -12,7 +12,7 @@ namespace Databases.DomainModel
         public ObjectId UserId { get; set; }
         public ObjectId ProductId { get; set; }
         public string Action { get; set; }
-        public int Grade { get; set; }
+        public double Grade { get; set; }
 
         public RecommenderAction()
         {

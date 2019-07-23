@@ -52,6 +52,20 @@ namespace RecommenderSystem.Controllers
 
                 List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 5);
                 List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 5);
+
+                foreach(RecommendationEngine.Objects.Suggestion s in suggestions1)
+                {
+                    Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+                    if(!products.Exists(x=>x.Id.Equals(product.Id)))
+                        products.Add(product);
+                }
+
+                foreach (RecommendationEngine.Objects.Suggestion s in suggestions2)
+                {
+                    Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+                    if (!products.Exists(x => x.Id.Equals(product.Id)))
+                        products.Add(product);
+                }
             }
 
             return View(products);

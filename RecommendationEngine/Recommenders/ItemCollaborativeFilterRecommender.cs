@@ -31,7 +31,7 @@ namespace RecommendationEngine.Recommenders
             int features = ratings.Users.Count;
             transposedRatings = new double[ratings.ProductIndexToID.Count][];
 
-            // Precompute a transposed ratings matrix where each row becomes an article and each column a user or tag
+            // Precompute a transposed ratings matrix where each row becomes a product and each column a user or category
             for (int a = 0; a < ratings.ProductIndexToID.Count; a++)
             {
                 transposedRatings[a] = new double[features];
@@ -85,14 +85,14 @@ namespace RecommendationEngine.Recommenders
 
             for (int productIndex = 0; productIndex < ratings.ProductIndexToID.Count; productIndex++)
             {
-                // Create a list of every article this user has viewed
+                // Create a list of every product this user has viewed
                 if (ratings.Users[userIndex].ProductRatings[productIndex] != 0)
                 {
                     items.Add(new Tuple<int, double>(productIndex, ratings.Users[userIndex].ProductRatings[productIndex]));
                 }
             }
 
-            // Sort the articles by rating
+            // Sort the products by rating
             items.Sort((c, n) => n.Item2.CompareTo(c.Item2));
 
             return items.Select(x => x.Item1).ToList();

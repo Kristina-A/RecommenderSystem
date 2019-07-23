@@ -181,7 +181,8 @@ namespace RecommenderSystem.Controllers
                         Name = model.FirstName,
                         BirthDate = model.BirthDate,
                         Phone = model.Phone,
-                        Surname = model.Surname
+                        Surname = model.Surname,
+                        Gender = model.Gender
                     };
                     newUser.Address.Add(model.Address);
 

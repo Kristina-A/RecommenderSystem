@@ -15,7 +15,7 @@
     <nav class="container navbar-expand-lg navbar-dark bg-dark fixed-top d-flex" style="padding-left: 0px !important; padding-right: 0px !important; align-items: center;">
 
         <!--ICON-->
-        <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="margin-left: 60px;">
+        <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="margin-left: 30px;">
             <img id="logo" src="~/Resources/Logo Orange.png" alt="GBC Web Shop" width="150" height="60" />
         </a>
 
@@ -59,7 +59,7 @@
 
         @if (User.IsInRole("User"))
         {
-            <span style="margin: 0 0 0 180px;">
+            <span style="margin: 0 30px 0 150px;">
                 <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod" style=" border: none; border-radius: 20px; padding: 7px; padding-left: 12px;" />
                 <button class="btn btn-outline-light" onclick="SearchProduct()" style="border-radius: 10px">Pretraži</button>
             </span>

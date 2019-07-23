@@ -17,5 +17,13 @@ namespace RecommendationEngine.Parsers
         public List<Databases.DomainModel.User> Users { get; set; }
 
         public List<UserAction> UserActions { get; set; }
+
+        public UserBehaviorDatabase()
+        {
+            Categories = new List<string>();
+            Products = new List<Databases.DomainModel.Product>();
+            Users = new List<Databases.DomainModel.User>();
+            UserActions = new List<UserAction>();
+        }
     }
 }

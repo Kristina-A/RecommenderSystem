@@ -343,12 +343,15 @@ namespace Databases
             dt.Clear();
             da.Fill(dt);
 
+            MongodbFunctions mongo = new MongodbFunctions();
+
             foreach (DataRow dr in dt.Rows)
             {
                 DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
                 action.Action = "SeeReviews";
                 action.UserId = new ObjectId(dr["userid"].ToString());
                 action.ProductId = new ObjectId(dr["productid"].ToString());
+                action.Grade = mongo.AverageGrade(action.ProductId)[0];
 
                 actions.Add(action);
             }
@@ -439,12 +442,15 @@ namespace Databases
             dt.Clear();
             da.Fill(dt);
 
+            MongodbFunctions mongo = new MongodbFunctions();
+
             foreach (DataRow dr in dt.Rows)
             {
                 DomainModel.RecommenderAction action = new DomainModel.RecommenderAction();
                 action.Action = "SeeReviews";
                 action.UserId = new ObjectId(dr["userid"].ToString());
                 action.ProductId = new ObjectId(dr["productid"].ToString());
+                action.Grade = mongo.AverageGrade(action.ProductId)[0];
 
                 actions.Add(action);
             }
