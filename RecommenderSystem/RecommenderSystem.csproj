@@ -285,9 +285,13 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\My scripts\AdminProductScript.js" />
     <Content Include="Scripts\My scripts\BuyScript.js" />
     <Content Include="Scripts\My scripts\CheckoutScript.js" />
     <Content Include="Scripts\My scripts\HomePageScript.js" />
+    <Content Include="Scripts\My scripts\NavbarScript.js" />
+    <Content Include="Scripts\My scripts\NewAdvertScript.js" />
+    <Content Include="Scripts\My scripts\NewProductScript.js" />
     <Content Include="Scripts\My scripts\ProductDetailsScript.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
@@ -343,6 +347,8 @@
     <Content Include="Views\Product\CategoryProducts.cshtml" />
     <Content Include="Views\Product\ProductDetails.cshtml" />
     <Content Include="Views\Order\Checkout.cshtml" />
+    <Content Include="Views\Product\NewProduct.cshtml" />
+    <Content Include="Views\Product\SearchProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
