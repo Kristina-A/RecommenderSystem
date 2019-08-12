@@ -442,5 +442,12 @@ namespace Databases
 
             return subcategories;
         }
+
+        public void InsertAd(Advert advert)
+        {
+            var advertsCollection = db.GetCollection<Advert>("adverts");
+
+            advertsCollection.InsertOne(advert);
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace RecommenderSystem.Controllers
         public ActionResult Index()
         {
             List<Databases.DomainModel.Product> products = new List<Databases.DomainModel.Product>();
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated && User.IsInRole("User"))
             {
                 MongodbFunctions mongo = new MongodbFunctions();
                 TimescaledbFunctions tdb = new TimescaledbFunctions();

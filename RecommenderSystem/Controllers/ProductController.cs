@@ -300,5 +300,45 @@ namespace RecommenderSystem.Controllers
             //TimescaledbFunctions tdb = new TimescaledbFunctions();
             //tdb.ViewProduct(user.Id.ToString(), prodID);
         }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult NewProduct()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public void AddNewProduct(string name, string category, string subcategory, int price, string characteristics)
+        {
+            MongodbFunctions mongo = new MongodbFunctions();
+
+            var picture = Request.Files["picture"];
+            string path = System.IO.Path.Combine(Server.MapPath("~/Resources"), name + System.IO.Path.GetExtension(picture.FileName));
+            picture.SaveAs(path);
+
+            Databases.DomainModel.Category cat = mongo.GetCategory(category);
+            Databases.DomainModel.Product newProduct = new Databases.DomainModel.Product
+            {
+                Name = name,
+                Price = price,
+                Subcategory = subcategory,
+                Picture = name + System.IO.Path.GetExtension(picture.FileName),
+                Category = new MongoDBRef("categories", cat.Id),
+                Characteristics = JsonConvert.DeserializeObject<List<string>>(characteristics)
+            };
+
+            mongo.InsertProduct(newProduct, category);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public JsonResult ReturnSubcategories(string option)
+        {
+            MongodbFunctions mongo = new MongodbFunctions();
+            List<string> subcategories = mongo.GetSubcategories(option);
+
+            return Json(new { subcat = subcategories }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

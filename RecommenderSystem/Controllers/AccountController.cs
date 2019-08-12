@@ -167,7 +167,7 @@ namespace RecommenderSystem.Controllers
                     //await roleManager.CreateAsync(new IdentityRole("Admin"));
                     //await UserManager.AddToRoleAsync(user.Id, "Admin");
                     //////////////////////////////////////////////////////
-                    
+
 
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 

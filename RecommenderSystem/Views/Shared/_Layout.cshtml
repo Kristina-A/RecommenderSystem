@@ -100,6 +100,80 @@
         </div>
     </div>
 
+    <!--Modal za dodavanje reklame-->
+    <div class="modal fade" id="addAd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-sm-12 control-label">Kategorije:</label>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" value="Laptopovi i tableti">
+                            <label class="form-check-label">Laptopovi i tableti</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" value="Mobilni telefoni">
+                            <label class="form-check-label">Mobilni telefoni</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" value="Gotove konfiguracije">
+                            <label class="form-check-label">Gotove konfiguracije</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" value="Računarske komponente">
+                            <label class="form-check-label">Računarske komponente</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" value="Tv i audio">
+                            <label class="form-check-label">Tv i audio</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" id="cat6" value="Foto i video">
+                            <label class="form-check-label">Foto i video</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" id="cat7" value="Monitori i periferije">
+                            <label class="form-check-label">Monitori i periferije</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" id="cat8" value="Štampači">
+                            <label class="form-check-label">Štampači</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" id="cat9" value="Konzole">
+                            <label class="form-check-label">Konzole</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" id="cat10" value="Memorije">
+                            <label class="form-check-label">Memorije</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" value="Bela tehnika">
+                            <label class="form-check-label">Bela tehnika</label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <input type="checkbox" class="form-check-input" value="Mrežna oprema">
+                            <label class="form-check-label">Mrežna oprema</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 control-label">Dodaj sliku:</label>
+                        <input type="file" class="form-control-file" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*" id="btnAdPicture">
+                    </div>
+                    <br />
+                    <button class="btn btn-success col-sm-offset-3" id="saveAd" type="button"><i class="fas fa-check"></i><span>&nbsp; Sačuvaj</span></button>
+                    <button class="btn btn-danger col-sm-offset-1" id="discardAd" type="button"><i class="fas fa-times"></i><span>&nbsp; Otkaži</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="container body-content">
         @RenderBody()
