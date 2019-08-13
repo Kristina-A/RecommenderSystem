@@ -340,5 +340,17 @@ namespace RecommenderSystem.Controllers
 
             return Json(new { subcat = subcategories }, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult SearchProduct(string name)
+        {
+            MongodbFunctions mongo = new MongodbFunctions();
+
+            if (name.Equals(""))
+                return RedirectToAction("Home", "Index");
+
+            List<Databases.DomainModel.Product> products = mongo.SearchForProductsByName(name);
+
+            return View(products);
+        }
     }
 }

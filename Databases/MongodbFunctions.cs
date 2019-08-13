@@ -449,5 +449,31 @@ namespace Databases
 
             advertsCollection.InsertOne(advert);
         }
+
+        public List<Advert> GetAdverts(string subcat)
+        {
+            var advertsCollection = db.GetCollection<Advert>("adverts");
+            var filter = Builders<Advert>.Filter.AnyEq("Subcategories", subcat);
+
+            return advertsCollection.Find(filter).ToList();
+        }
+
+        public List<Advert> GetLaptopAdverts()
+        {
+            var advertsCollection = db.GetCollection<Advert>("adverts");
+            var filter = Builders<Advert>.Filter.AnyEq("Subcategories", "Laptopovi i tableti");
+
+            return advertsCollection.Find(filter).ToList();
+        }
+
+        public List<Product> SearchForProductsByName(string name)
+        {
+            var productsCollection = db.GetCollection<Product>("products");
+
+            var filter = Builders<Product>.Filter.Regex("Name", new BsonRegularExpression(".*" + name + ".*", "i"));
+            var products = productsCollection.Find(filter);
+
+            return products.ToList();
+        }
     }
 }

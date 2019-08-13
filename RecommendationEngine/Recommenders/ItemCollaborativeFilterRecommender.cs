@@ -60,7 +60,8 @@ namespace RecommendationEngine.Recommenders
                     var nonZeroRatings = transposedRatings[neighborProductIndex].Where(x => x != 0);
                     double averageProductRating = nonZeroRatings.Count() > 0 ? nonZeroRatings.Average() : 0;
 
-                    suggestions.Add(new Suggestion(userId, neighbor.ProductID, averageProductRating));
+                    if(!suggestions.Exists(x=>x.ProductID.Equals(neighbor.ProductID)))
+                        suggestions.Add(new Suggestion(userId, neighbor.ProductID, averageProductRating));
                 }
             }
 

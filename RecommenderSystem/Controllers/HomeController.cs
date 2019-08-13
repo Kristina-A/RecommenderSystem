@@ -14,9 +14,9 @@ namespace RecommenderSystem.Controllers
         public ActionResult Index()
         {
             List<Databases.DomainModel.Product> products = new List<Databases.DomainModel.Product>();
+            MongodbFunctions mongo = new MongodbFunctions();
             if (User.Identity.IsAuthenticated && User.IsInRole("User"))
             {
-                MongodbFunctions mongo = new MongodbFunctions();
                 TimescaledbFunctions tdb = new TimescaledbFunctions();
 
                 Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
@@ -39,6 +39,7 @@ namespace RecommenderSystem.Controllers
 
                 tdb.CloseConnection();
 
+                //recommend za proizvode
                 RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
                 RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
                 RecommendationEngine.Interfaces.IRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 20);
@@ -66,6 +67,33 @@ namespace RecommenderSystem.Controllers
                     if (!products.Exists(x => x.Id.Equals(product.Id)))
                         products.Add(product);
                 }
+
+                //recommend za reklame
+                db = parser.LoadUserBehaviorDatabase(parser.LoadForAdverts());
+                recommender1.Train(db);
+                suggestions1 = recommender1.GetSuggestions(user.Id, 5);
+
+                if (suggestions1.Count != 0)
+                {
+                    List<Databases.DomainModel.Advert> adverts = new List<Databases.DomainModel.Advert>();
+                    foreach (RecommendationEngine.Objects.Suggestion s in suggestions1)
+                    {
+                        Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+
+                        foreach(Databases.DomainModel.Advert advert in mongo.GetAdverts(product.Subcategory))
+                        {
+                            if (!adverts.Exists(x => x.Id.Equals(advert.Id)))
+                                adverts.Add(advert);
+                        }
+                    }
+                    ViewBag.Adverts = adverts;
+                }
+                else
+                    ViewBag.Adverts = mongo.GetLaptopAdverts();
+            }
+            else
+            {
+                products = mongo.GetProducts();
             }
 
             return View(products);
