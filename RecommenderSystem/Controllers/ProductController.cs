@@ -7,6 +7,7 @@ using Databases;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Newtonsoft.Json;
+using RecommendationEngine;
 
 namespace RecommenderSystem.Controllers
 {
@@ -351,6 +352,38 @@ namespace RecommenderSystem.Controllers
             List<Databases.DomainModel.Product> products = mongo.SearchForProductsByName(name);
 
             return View(products);
+        }
+
+        [HttpPost]
+        public JsonResult GetSuggestions()
+        {
+            List<string> products = new List<string>();
+
+            if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+            {
+                MongodbFunctions mongo = new MongodbFunctions();
+                Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+
+                RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
+                RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
+                RecommendationEngine.Interfaces.IRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 20);
+
+                RecommendationEngine.Parsers.UserBehaviorDatabaseParser parser = new RecommendationEngine.Parsers.UserBehaviorDatabaseParser();
+                RecommendationEngine.Parsers.UserBehaviorDatabase db = parser.LoadUserBehaviorDatabase(parser.LoadForSearch());
+
+                recommender1.Train(db);
+
+                List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 5);
+
+                foreach (RecommendationEngine.Objects.Suggestion s in suggestions1)
+                {
+                    Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+                    if (!products.Exists(x => x.Equals(product.Name)))
+                        products.Add(product.Name);
+                }
+            }
+
+            return Json(new { prods = products }, JsonRequestBehavior.AllowGet);
         }
     }
 }
