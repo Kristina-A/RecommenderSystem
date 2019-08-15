@@ -74,8 +74,8 @@ namespace RecommendationEngine.Recommenders
             UserBehaviorTransformer ubt = new UserBehaviorTransformer(db);
             ratings = ubt.GetUserProductRatingsTable(rater);
 
-            List<ProductCategoryCount> articleTags = ubt.GetProductCategoryCounts();
-            ratings.AppendProductFeatures(articleTags);
+            List<ProductCategoryCount> productCategories = ubt.GetProductCategoryCounts();
+            ratings.AppendProductFeatures(productCategories);
 
             FillTransposedRatings();
         }

@@ -15,18 +15,38 @@
                 @{ var i = 0;}
                 @foreach (Databases.DomainModel.Advert a in ViewBag.Adverts)
                 {
-                    <li data-target="#carouselExampleIndicators" data-slide-to=@i class="active"></li>
+                    if (i == 0)
+                    {
+                        <li data-target="#carouselExampleIndicators" data-slide-to=@i class="active"></li>
+                    }
+                    else
+                    {
+                        <li data-target="#carouselExampleIndicators" data-slide-to=@i></li>
+                    }
                     i++;
                 }
             </ol>
             <div class="carousel-inner">
+                @{ var j = 0;}
                 @foreach (Databases.DomainModel.Advert a in ViewBag.Adverts)
                 {
-                    <div class="carousel-item active">
-                        <a href="">
-                            <img width="100" height="350" class="d-block w-100" src="~/Resources/Adverts/@a.Picture" alt="First slide">
-                        </a>
-                    </div>
+                    if (j == 0)
+                    {
+                        <div class="carousel-item active">
+                            <a href="">
+                                <img width="100" height="350" class="d-block w-100" src="~/Resources/Adverts/@a.Picture">
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="carousel-item">
+                            <a href="">
+                                <img width="100" height="350" class="d-block w-100" src="~/Resources/Adverts/@a.Picture">
+                            </a>
+                        </div>
+                    }
+                    j++;
                 }
             </div>
             <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

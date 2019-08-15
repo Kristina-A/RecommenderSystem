@@ -59,12 +59,11 @@
 
         @if (User.IsInRole("User"))
         {
-            <form class="form-inline d-flex dropdown" style="margin: 0 30px 0 150px;">
+            <div style="margin: 0 30px 0 150px;">
                 <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod" data-toggle="dropdown" style=" border: none; border-radius: 20px; padding: 7px; padding-left: 12px;" />
                 <button class="btn btn-outline-light" id="btnSearch" style="border-radius: 10px"><i class="fas fa-search"></i> &nbsp; Pretraži</button>
-                <ul class="dropdown-menu" id="suggestions" aria-labelledby="searchBar">
-                </ul>
-            </form>
+                <ul class="dropdown-menu" id="suggestions" aria-labelledby="searchBar"></ul>
+            </div>
         }
         else if (User.IsInRole("Admin"))
         {
@@ -186,6 +185,7 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jquery-ui")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/Scripts/My scripts/NavbarScript.js")
     @Scripts.Render("~/Scripts/My scripts/BuyScript.js")

@@ -1,4 +1,5 @@
-﻿function addSuggestion(name) {
+﻿
+function addSuggestion(name) {
     var par = document.getElementById("suggestions");
 
     var item = document.createElement("li");
@@ -16,9 +17,14 @@ $(document).ready(function () {
         url: '/Product/GetSuggestions',
         success: function (data) {
             if (data.prods.length > 0) {
-                for (var i = 0; i < data.prods.length; i++)
+                for (var i = 0; i < data.prods.length; i++) {
                     addSuggestion(data.prods[i]);
+                }
             }
+            
+            $("#searchBar").autocomplete({
+                source: null
+            });
         },
         error: function () {
             alert("fail");
@@ -30,7 +36,9 @@ $(document).ready(function () {
 
         if (val == "")
             window.location.reload();
-        else
-            window.location.href = '/Product/SearchProduct?name=' + val;
+        else {
+            var url = "/Product/SearchProduct?name=" + val;
+            window.location.replace(url);
+        }
     });
 });

@@ -35,7 +35,7 @@ namespace RecommendationEngine.Recommenders
 
             for (int productIndex = 0; productIndex < ratings.ProductIndexToID.Count; productIndex++)
             {
-                // If the user in question hasn't rated the given article yet
+                // If the user in question hasn't rated the given product yet
                 if (user.ProductRatings[productIndex] == 0)
                 {
                     double score = 0.0;
@@ -44,7 +44,7 @@ namespace RecommendationEngine.Recommenders
                     {
                         if (neighbors[u].ProductRatings[productIndex] != 0)
                         {
-                            // Calculate the weighted score for this article   
+                            // Calculate the weighted score for this product   
                             score += neighbors[u].ProductRatings[productIndex];
                             count++;
                         }
