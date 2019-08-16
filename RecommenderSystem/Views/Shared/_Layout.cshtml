@@ -59,7 +59,7 @@
 
         @if (User.IsInRole("User"))
         {
-            <div style="margin: 0 30px 0 150px;">
+            <div style="margin: 0 20px 0 150px;">
                 <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod" data-toggle="dropdown" style=" border: none; border-radius: 20px; padding: 7px; padding-left: 12px;" />
                 <button class="btn btn-outline-light" id="btnSearch" style="border-radius: 10px"><i class="fas fa-search"></i> &nbsp; Pretraži</button>
                 <ul class="dropdown-menu" id="suggestions" aria-labelledby="searchBar"></ul>
@@ -67,7 +67,7 @@
         }
         else if (User.IsInRole("Admin"))
         {
-            <span style="margin: 0 30px 0 200px;">
+            <span style="margin: 0 30px 0 70px;">
                 <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod" style=" border: none; border-radius: 20px; padding: 7px; padding-left: 12px;" />
                 <button class="btn btn-outline-light" id="btnSearch" style="border-radius: 10px"><i class="fas fa-search"></i> &nbsp; Pretraži</button>
             </span>
