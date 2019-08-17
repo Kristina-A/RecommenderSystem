@@ -22,13 +22,13 @@
     border: 1px solid rgb(180,180,180);
     margin-left:20px;
     margin-bottom:10px;
-    height:350px;
+    height:400px;
 }
 
 #prodImg{
     height:30%;
-    width:70%;
-    margin-left:15px;
+    width:80%;
+    margin-left:10px;
 }
 
 #cardBody{

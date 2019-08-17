@@ -51,8 +51,8 @@ namespace RecommenderSystem.Controllers
                 recommender1.Train(db);
                 recommender2.Train(db);
 
-                List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 5);
-                List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 5);
+                List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 6);
+                List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 6);
 
                 foreach(RecommendationEngine.Objects.Suggestion s in suggestions1)
                 {
