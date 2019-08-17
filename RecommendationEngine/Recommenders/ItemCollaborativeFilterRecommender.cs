@@ -106,11 +106,14 @@ namespace RecommendationEngine.Recommenders
 
             for (int productIndex = 0; productIndex < ratings.ProductIndexToID.Count; productIndex++)
             {
-                ObjectId searchProductId = ratings.ProductIndexToID[productIndex];
+                if (productIndex != mainProductIndex)
+                {
+                    ObjectId searchProductId = ratings.ProductIndexToID[productIndex];
 
-                double score = comparer.CompareVectors(transposedRatings[mainProductIndex], transposedRatings[productIndex]);
+                    double score = comparer.CompareVectors(transposedRatings[mainProductIndex], transposedRatings[productIndex]);
 
-                neighbors.Add(new ProductRating(searchProductId, score));
+                    neighbors.Add(new ProductRating(searchProductId, score));
+                }
             }
 
             neighbors.Sort((c, n) => n.Rating.CompareTo(c.Rating));
