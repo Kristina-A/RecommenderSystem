@@ -42,8 +42,8 @@ namespace RecommenderSystem.Controllers
                 //recommend za proizvode
                 RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
                 RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
-                RecommendationEngine.Interfaces.IRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 10);
-                RecommendationEngine.Interfaces.IRecommender recommender2 = new RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender(comparer, rater, 10);
+                RecommendationEngine.Interfaces.IRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 5);
+                RecommendationEngine.Interfaces.IRecommender recommender2 = new RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender(comparer, rater, 5);
 
                 RecommendationEngine.Parsers.UserBehaviorDatabaseParser parser = new RecommendationEngine.Parsers.UserBehaviorDatabaseParser();
                 RecommendationEngine.Parsers.UserBehaviorDatabase db = parser.LoadUserBehaviorDatabase(parser.LoadForHome());
@@ -52,7 +52,7 @@ namespace RecommenderSystem.Controllers
                 recommender2.Train(db);
 
                 List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 6);
-                List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 6);
+                List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 0);
 
                 foreach(RecommendationEngine.Objects.Suggestion s in suggestions1)
                 {

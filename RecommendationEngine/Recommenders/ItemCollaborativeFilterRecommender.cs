@@ -58,9 +58,9 @@ namespace RecommendationEngine.Recommenders
                 {
                     int neighborProductIndex = ratings.ProductIndexToID.IndexOf(neighbor.ProductID);
                     var nonZeroRatings = transposedRatings[neighborProductIndex].Where(x => x != 0);
-                    double averageProductRating = nonZeroRatings.Count() > 0 ? nonZeroRatings.Average() : 0;
+                    double averageProductRating = nonZeroRatings.Count() > 0 ? nonZeroRatings.Average()+neighbor.Rating : 0;
 
-                    if(!suggestions.Exists(x=>x.ProductID.Equals(neighbor.ProductID)))
+                    if(!suggestions.Exists(x=>x.ProductID.Equals(neighbor.ProductID)) && !products.Exists(x=>x==neighborProductIndex))
                         suggestions.Add(new Suggestion(userId, neighbor.ProductID, averageProductRating));
                 }
             }

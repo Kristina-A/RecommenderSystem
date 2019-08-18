@@ -9,19 +9,19 @@ $(document).ready(function () {
         });
     }
 
-    $("#viewProduct").on("click", function () {
-        var prodID = $(this).attr("href");
-        var links = prodID.split("/");
+    //$("#viewProduct").on("click", function () {
+    //    var prodID = $(this).attr("href");
+    //    var links = prodID.split("/");
 
-        $.ajax({
-            type: "POST",
-            url: '/Product/ViewProduct',
-            data: { "prodID": links[3] },
-            success: function () {
-            },
-            error: function () {
-                alert("fail");
-            }
-        });
-    });
+    //    $.ajax({
+    //        type: "POST",
+    //        url: '/Product/ViewProduct',
+    //        data: { "prodID": links[3] },
+    //        success: function () {
+    //        },
+    //        error: function () {
+    //            alert("fail");
+    //        }
+    //    });
+    //});
 });
