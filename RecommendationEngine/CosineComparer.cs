@@ -22,7 +22,12 @@ namespace RecommendationEngine
                 sumTwoSquared += Math.Pow(vectorTwo[i], 2);
             }
 
-            return sumProduct / (Math.Sqrt(sumOneSquared) * Math.Sqrt(sumTwoSquared));
+            double intensities = Math.Sqrt(sumOneSquared) * Math.Sqrt(sumTwoSquared);
+
+            if (sumProduct == 0 && intensities == 0)
+                return 0;
+            else
+                return sumProduct / (Math.Sqrt(sumOneSquared) * Math.Sqrt(sumTwoSquared));
         }
     }
 }

@@ -39,9 +39,9 @@ namespace RecommenderSystem.Controllers
                 if (User.IsInRole("User"))
                 {
                     Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
-                    //TimescaledbFunctions tdb = new TimescaledbFunctions();
-                    //tdb.ViewProduct(user.Id.ToString(), prodID);
-                    //tdb.CloseConnection();
+                    TimescaledbFunctions tdb = new TimescaledbFunctions();
+                    tdb.ViewProduct(user.Id.ToString(), id);
+                    tdb.CloseConnection();
                 }
                 return View(product);
             }
@@ -160,11 +160,11 @@ namespace RecommenderSystem.Controllers
 
             if (User.IsInRole("User"))
             {
-                //Databases.DomainModel.User u = mongo.GetUser(User.Identity.Name);
+                Databases.DomainModel.User u = mongo.GetUser(User.Identity.Name);
 
-                //TimescaledbFunctions tdb = new TimescaledbFunctions();
-                //tdb.SeeReviews(u.Id.ToString(), id);
-                //tdb.CloseConnection();
+                TimescaledbFunctions tdb = new TimescaledbFunctions();
+                tdb.SeeReviews(u.Id.ToString(), id);
+                tdb.CloseConnection();
             }
 
             return Json(new { number = count, revs = reviews, people = users }, JsonRequestBehavior.AllowGet);
