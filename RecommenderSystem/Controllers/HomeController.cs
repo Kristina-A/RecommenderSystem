@@ -42,56 +42,75 @@ namespace RecommenderSystem.Controllers
                 //recommend za proizvode
                 RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
                 RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
-                RecommendationEngine.Interfaces.IRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 5);
+                RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 5);
                 RecommendationEngine.Interfaces.IRecommender recommender2 = new RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender(comparer, rater, 5);
 
                 RecommendationEngine.Parsers.UserBehaviorDatabaseParser parser = new RecommendationEngine.Parsers.UserBehaviorDatabaseParser();
-                RecommendationEngine.Parsers.UserBehaviorDatabase db = parser.LoadUserBehaviorDatabase(parser.LoadForHome());
+                List<Databases.DomainModel.RecommenderAction> actions = parser.LoadForHome();
+                RecommendationEngine.Parsers.UserBehaviorDatabase db = parser.LoadUserBehaviorDatabase(actions);
 
                 recommender1.Train(db);
                 recommender2.Train(db);
 
-                List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 6);
-                List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 3);
-
-                foreach(RecommendationEngine.Objects.Suggestion s in suggestions1)
+                if (actions.Count(x=>x.UserId.Equals(user.Id))>0)//if user has actions, recommendation can be done
                 {
-                    Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
-                    if(!products.Exists(x=>x.Id.Equals(product.Id)))
-                        products.Add(product);
-                }
+                    List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 6);
+                    List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 0);
 
-                foreach (RecommendationEngine.Objects.Suggestion s in suggestions2)
-                {
-                    Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
-                    if (!products.Exists(x => x.Id.Equals(product.Id)))
-                        products.Add(product);
-                }
-
-                //recommend za reklame
-                db = parser.LoadUserBehaviorDatabase(parser.LoadForAdverts());
-                recommender1.Train(db);
-                suggestions1 = recommender1.GetSuggestions(user.Id, 5);
-
-                if (suggestions1.Count != 0)
-                {
-                    List<Databases.DomainModel.Advert> adverts = new List<Databases.DomainModel.Advert>();
                     foreach (RecommendationEngine.Objects.Suggestion s in suggestions1)
                     {
                         Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
-
-                        foreach(Databases.DomainModel.Advert advert in mongo.GetAdverts(product.Subcategory))
-                        {
-                            if (!adverts.Exists(x => x.Id.Equals(advert.Id)))
-                                adverts.Add(advert);
-                        }
+                        if (!products.Exists(x => x.Id.Equals(product.Id)))
+                            products.Add(product);
                     }
-                    ViewBag.Adverts = adverts;
+
+                    foreach (RecommendationEngine.Objects.Suggestion s in suggestions2)
+                    {
+                        Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+                        if (!products.Exists(x => x.Id.Equals(product.Id)))
+                            products.Add(product);
+                    }
                 }
+                else//no actions, recommendation using gender and birth date
+                {
+                    List<RecommendationEngine.Objects.Suggestion> suggestions1=recommender1.GetFirstSuggestions(db, user, 10);
+
+                    foreach (RecommendationEngine.Objects.Suggestion s in suggestions1)
+                    {
+                        Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+                        if (!products.Exists(x => x.Id.Equals(product.Id)))
+                            products.Add(product);
+                    }
+                }
+
+                //recommend za reklame
+                List<Databases.DomainModel.Advert> adverts = new List<Databases.DomainModel.Advert>();
+
+                actions = parser.LoadForAdverts();
+                db = parser.LoadUserBehaviorDatabase(actions);
+
+                recommender1.Train(db);
+
+                List<RecommendationEngine.Objects.Suggestion> suggestions = new List<RecommendationEngine.Objects.Suggestion>();
+
+                if (actions.Count(x => x.UserId.Equals(user.Id)) > 0)
+                    suggestions = recommender1.GetSuggestions(user.Id, 5);
                 else
-                    ViewBag.Adverts = mongo.GetLaptopAdverts();
+                    suggestions = recommender1.GetFirstSuggestions(db, user, 10);
+
+                foreach (RecommendationEngine.Objects.Suggestion s in suggestions)
+                {
+                    Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+
+                    foreach (Databases.DomainModel.Advert advert in mongo.GetAdverts(product.Subcategory))
+                    {
+                        if (!adverts.Exists(x => x.Id.Equals(advert.Id)))
+                            adverts.Add(advert);
+                    }
+                }
+                ViewBag.Adverts = adverts;
             }
-            else
+            else //admin logged
             {
                 products = mongo.GetProducts();
             }

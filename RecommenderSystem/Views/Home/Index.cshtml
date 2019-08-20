@@ -8,7 +8,7 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    if (User.IsInRole("User"))
+    if (User.IsInRole("User") && ViewBag.Adverts!=null)
     {
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">

@@ -368,16 +368,22 @@ namespace RecommenderSystem.Controllers
 
                 RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
                 RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
-                RecommendationEngine.Interfaces.IRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 20);
+                RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 20);
 
                 RecommendationEngine.Parsers.UserBehaviorDatabaseParser parser = new RecommendationEngine.Parsers.UserBehaviorDatabaseParser();
-                RecommendationEngine.Parsers.UserBehaviorDatabase db = parser.LoadUserBehaviorDatabase(parser.LoadForSearch());
+                List<Databases.DomainModel.RecommenderAction> actions = parser.LoadForSearch();
+                RecommendationEngine.Parsers.UserBehaviorDatabase db = parser.LoadUserBehaviorDatabase(actions);
 
                 recommender1.Train(db);
 
-                List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 5);
+                List<RecommendationEngine.Objects.Suggestion> suggestions = new List<RecommendationEngine.Objects.Suggestion>();
 
-                foreach (RecommendationEngine.Objects.Suggestion s in suggestions1)
+                if (actions.Count(x => x.UserId.Equals(user.Id)) > 0)
+                    suggestions = recommender1.GetSuggestions(user.Id, 5);
+                else
+                    suggestions = recommender1.GetFirstSuggestions(db, user, 5);
+
+                foreach (RecommendationEngine.Objects.Suggestion s in suggestions)
                 {
                     Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
                     if (!products.Exists(x => x.Equals(product.Name)))

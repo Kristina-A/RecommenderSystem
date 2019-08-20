@@ -7,10 +7,11 @@ using MongoDB.Bson;
 using RecommendationEngine.Interfaces;
 using RecommendationEngine.Objects;
 using RecommendationEngine.Parsers;
+using Databases;
 
 namespace RecommendationEngine.Recommenders
 {
-    public class ItemCollaborativeFilterRecommender : IRecommender
+    public class ItemCollaborativeFilterRecommender:IRecommender
     {
         private IComparer comparer;
         private IRater rater;
@@ -123,6 +124,38 @@ namespace RecommendationEngine.Recommenders
             neighbors.Sort((c, n) => n.Rating.CompareTo(c.Rating));
 
             return neighbors.Take(numArticles).ToList();
+        }
+
+        public List<Suggestion> GetFirstSuggestions(UserBehaviorDatabase db, Databases.DomainModel.User user, int numSuggestions)
+        {
+            var userActionGroup = db.UserActions
+                .GroupBy(x => new { x.UserID })
+                .Select(g => new { g.Key.UserID })
+                .ToList();
+
+            List<Suggestion> suggestions = new List<Suggestion>();
+            MongodbFunctions mongo = new MongodbFunctions();
+
+            foreach (var a in userActionGroup)
+            {
+                Databases.DomainModel.User u = mongo.GetUser(a.UserID);
+
+                if (u.Gender.Equals(user.Gender) || u.BirthDate.Year == user.BirthDate.Year)
+                {
+                    int userIndex = ratings.UserIndexToID.IndexOf(u.Id);
+                    List<int> products = GetHighestRatedProductsForUser(userIndex).Take(3).ToList();
+
+                    foreach (int productIndex in products)
+                    {
+                        ObjectId productId = ratings.ProductIndexToID[productIndex];
+                        suggestions.Add(new Suggestion(u.Id, productId, ratings.Users[userIndex].ProductRatings[productIndex]));
+                    }
+                }
+            }
+
+            suggestions.Sort((c, n) => n.Rating.CompareTo(c.Rating));
+
+            return suggestions.Take(numSuggestions).ToList();
         }
     }
 }
