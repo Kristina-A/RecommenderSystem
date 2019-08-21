@@ -24,4 +24,20 @@ $(document).ready(function () {
     //        }
     //    });
     //});
+
+    $('.carousel.carousel-multi-item.v-2 .carousel-item').each(function () {
+        var next = $(this).next();
+        if (!next.length) {
+            next = $(this).siblings(':first');
+        }
+        next.children(':first-child').children(':first-child').clone().appendTo($(this).children(':first-child'));
+
+        for (var i = 0; i < $('.carousel.carousel-multi-item.v-2 .carousel-item').length-2; i++) {
+            next = next.next();
+            if (!next.length) {
+                next = $(this).siblings(':first');
+            }
+            next.children(':first-child').children(':first-child').clone().appendTo($(this).children(':first-child'));
+        }
+    });
 });
