@@ -71,7 +71,6 @@
     <Compile Include="Objects\UserAction.cs" />
     <Compile Include="Objects\UserProductRatings.cs" />
     <Compile Include="Parsers\UserBehaviorDatabase.cs" />
-    <Compile Include="Interfaces\IRecommender.cs" />
     <Compile Include="Parsers\UserBehaviorDatabaseParser.cs" />
     <Compile Include="Parsers\UserBehaviorTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

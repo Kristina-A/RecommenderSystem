@@ -31,17 +31,43 @@ namespace RecommenderSystem.Controllers
             if (id.Equals(""))
                 return RedirectToAction("Home", "Index");
 
-            ObjectId objID = new ObjectId(id);
+            Databases.DomainModel.Product product = mongo.GetProduct(new ObjectId(id));
 
-            Databases.DomainModel.Product product = mongo.GetProduct(objID);
             if (product != null)
             {
                 if (User.IsInRole("User"))
                 {
-                    //Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
-                    //TimescaledbFunctions tdb = new TimescaledbFunctions();
+                    Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+                    TimescaledbFunctions tdb = new TimescaledbFunctions();
                     //tdb.ViewProduct(user.Id.ToString(), id);
-                    //tdb.CloseConnection();
+                    List<ObjectId> customers = tdb.GetCustomersOfProduct(id);
+                    List<Tuple<ObjectId, int>> ratingProducts = new List<Tuple<ObjectId, int>>();
+
+                    foreach(ObjectId objectId in customers)
+                    {
+                        List<ObjectId> productsIds = tdb.GetBoughtProducts(objectId, id);
+
+                        foreach(ObjectId prodId in productsIds)
+                        {
+                            if (!ratingProducts.Exists(x => x.Item1.Equals(prodId)))
+                                ratingProducts.Add(new Tuple<ObjectId, int>(prodId, 0));
+                            else
+                            {
+                                int index = ratingProducts.FindIndex(x => x.Item1.Equals(prodId));
+                                ratingProducts.Insert(index, new Tuple<ObjectId, int>(prodId, ratingProducts[index].Item2 + 1));
+                            }
+                        }
+                    }
+
+                    tdb.CloseConnection();
+
+                    ratingProducts.Sort((c, n) => n.Item2.CompareTo(c.Item2));
+                    List<Databases.DomainModel.Product> products = new List<Databases.DomainModel.Product>();
+
+                    foreach(Tuple<ObjectId,int> p in ratingProducts)
+                        products.Add(mongo.GetProduct(p.Item1));
+
+                    ViewBag.AlsoBought = products.Take(4).ToList();
                 }
                 return View(product);
             }

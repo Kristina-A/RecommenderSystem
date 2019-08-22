@@ -10,7 +10,7 @@ using RecommendationEngine.Parsers;
 
 namespace RecommendationEngine.Recommenders
 {
-    public class UserCollaborativeFilterRecommender : IRecommender
+    public class UserCollaborativeFilterRecommender
     {
         private IComparer comparer;
         private IRater rater;
@@ -89,6 +89,5 @@ namespace RecommendationEngine.Recommenders
 
             return similarUsers.Take(numUsers).ToList();
         }
-
     }
 }

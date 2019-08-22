@@ -50,6 +50,18 @@ namespace RecommendationEngine.Parsers
             return actions;
         }
 
+        public List<Databases.DomainModel.RecommenderAction> LoadForSimilarBoughtProducts()
+        {
+            List<Databases.DomainModel.RecommenderAction> actions = new List<Databases.DomainModel.RecommenderAction>();
+            TimescaledbFunctions tdb = new TimescaledbFunctions();
+
+            actions = tdb.GetMonthlyActivities(12);
+
+            tdb.CloseConnection();
+
+            return actions;
+        }
+
         public UserBehaviorDatabase LoadUserBehaviorDatabase(List<Databases.DomainModel.RecommenderAction> actions)
         {
             UserBehaviorDatabase db = new UserBehaviorDatabase();

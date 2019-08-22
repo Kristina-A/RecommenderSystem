@@ -11,7 +11,7 @@ using Databases;
 
 namespace RecommendationEngine.Recommenders
 {
-    public class ItemCollaborativeFilterRecommender:IRecommender
+    public class ItemCollaborativeFilterRecommender
     {
         private IComparer comparer;
         private IRater rater;

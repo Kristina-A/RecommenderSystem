@@ -41,7 +41,7 @@ namespace RecommenderSystem.Controllers
                 RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
                 RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
                 RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 5);
-                RecommendationEngine.Interfaces.IRecommender recommender2 = new RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender(comparer, rater, 5);
+                RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender recommender2 = new RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender(comparer, rater, 5);
 
                 RecommendationEngine.Parsers.UserBehaviorDatabaseParser parser = new RecommendationEngine.Parsers.UserBehaviorDatabaseParser();
                 List<Databases.DomainModel.RecommenderAction> actions = parser.LoadForHome();
@@ -53,7 +53,7 @@ namespace RecommenderSystem.Controllers
                 if (actions.Count(x=>x.UserId.Equals(user.Id))>0)//if user has actions, recommendation can be done
                 {
                     List<RecommendationEngine.Objects.Suggestion> suggestions1 = recommender1.GetSuggestions(user.Id, 6);
-                    List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 0);
+                    List<RecommendationEngine.Objects.Suggestion> suggestions2 = recommender2.GetSuggestions(user.Id, 3);
 
                     foreach (RecommendationEngine.Objects.Suggestion s in suggestions1)
                     {

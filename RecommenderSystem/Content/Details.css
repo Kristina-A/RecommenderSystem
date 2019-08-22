@@ -1,6 +1,6 @@
 ﻿#prodCard {
     border: 1px solid rgb(180,180,180);
-    margin-left: 55px;
+    margin-right: 55px;
     margin-bottom: 10px;
     height: 400px;
 }
@@ -21,9 +21,9 @@
     color: red;
 }
 
-/*h5 {
+h5#title {
     height: 30%;
-}*/
+}
 
 #prodLink {
     width: inherit;

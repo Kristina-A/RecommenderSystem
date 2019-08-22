@@ -484,5 +484,51 @@ namespace Databases
 
             return products;
         }
+
+        public List<ObjectId> GetCustomersOfProduct(string prodID)
+        {
+            List<ObjectId> customers = new List<ObjectId>();
+
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select userid from boughtproducts where productid=@id and time>@t";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@id", prodID));
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddYears(-1)));
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+
+            foreach(DataRow dr in dt.Rows)
+            {
+                if(!customers.Exists(x=>x.Equals(new ObjectId(dr["userid"].ToString()))))
+                    customers.Add(new ObjectId(dr["userid"].ToString()));
+            }
+          
+            return customers;
+        }
+
+        public List<ObjectId> GetBoughtProducts(ObjectId id, string prodID)
+        {
+            List<ObjectId> products = new List<ObjectId>();
+
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select productid from boughtproducts where userid=@userid and productid<>@prodid";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@prodid", prodID));
+            cmd.Parameters.Add(new NpgsqlParameter("@userid", id.ToString()));
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (!products.Exists(x => x.Equals(new ObjectId(dr["productid"].ToString()))))
+                    products.Add(new ObjectId(dr["productid"].ToString()));
+            }
+
+            return products;
+        }
     }
 }
