@@ -37,8 +37,6 @@ namespace RecommenderSystem.Controllers
                     tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "do_popusta");
                 }
 
-                tdb.CloseConnection();
-
                 //recommend za proizvode
                 RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
                 RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
@@ -109,6 +107,16 @@ namespace RecommenderSystem.Controllers
                     }
                 }
                 ViewBag.Adverts = adverts;
+
+                //last seen
+                List<MongoDB.Bson.ObjectId> prodIds = tdb.LastSeen(user.Id.ToString());
+                List<Databases.DomainModel.Product> lastSeen = new List<Databases.DomainModel.Product>();
+
+                foreach(MongoDB.Bson.ObjectId id in prodIds)
+                    lastSeen.Add(mongo.GetProduct(id));
+
+                tdb.CloseConnection();
+                ViewBag.LastSeen = lastSeen;
             }
             else //admin logged
             {

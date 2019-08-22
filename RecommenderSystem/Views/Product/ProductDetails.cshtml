@@ -95,6 +95,15 @@
     }
 </div>
 
+@if (User.IsInRole("User"))
+{
+    <br />
+    <hr />
+    <h3 class="text-center">Kupci ovog proizvoda kupili su i</h3>
+    <br />
+    <br />
+}
+
 
 <!--Modal koji prikazuje uvecanu sliku-->
 <div class="modal fade" id="pictureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -205,5 +214,6 @@
 </div>
 
 @section scripts {
+    @Styles.Render("~/Content/Details.css")
     @Scripts.Render("~/Scripts/My scripts/ProductDetailsScript.js")
 }

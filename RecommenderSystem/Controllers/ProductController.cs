@@ -38,10 +38,10 @@ namespace RecommenderSystem.Controllers
             {
                 if (User.IsInRole("User"))
                 {
-                    Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
-                    TimescaledbFunctions tdb = new TimescaledbFunctions();
-                    tdb.ViewProduct(user.Id.ToString(), id);
-                    tdb.CloseConnection();
+                    //Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
+                    //TimescaledbFunctions tdb = new TimescaledbFunctions();
+                    //tdb.ViewProduct(user.Id.ToString(), id);
+                    //tdb.CloseConnection();
                 }
                 return View(product);
             }

@@ -459,5 +459,30 @@ namespace Databases
 
             return actions;
         }
+
+        public List<ObjectId> LastSeen(string userID)
+        {
+            NpgsqlCommand cmd = new NpgsqlCommand();
+            cmd.Connection = conn;
+            cmd.CommandText = "select productid from viewedproducts where userid=@id and time>@t order by time desc";
+            cmd.CommandType = CommandType.Text;
+            cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
+            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now.AddDays(-21)));
+            da = new NpgsqlDataAdapter(cmd);
+            dt = new DataTable();
+            da.Fill(dt);
+
+            List<ObjectId> products = new List<ObjectId>();
+            int i = 0;
+
+            while(products.Count<3 && dt.Rows.Count>i)
+            {
+                if (!products.Exists(x => x.Equals(new ObjectId(dt.Rows[i]["productid"].ToString()))))
+                    products.Add(new ObjectId(dt.Rows[i]["productid"].ToString()));
+                i++;
+            }
+
+            return products;
+        }
     }
 }

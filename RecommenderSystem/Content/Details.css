@@ -1,0 +1,35 @@
+﻿#prodCard {
+    border: 1px solid rgb(180,180,180);
+    margin-left: 55px;
+    margin-bottom: 10px;
+    height: 400px;
+}
+
+#prodImg {
+    height: 30%;
+    width: 80%;
+    margin-left: 10px;
+}
+
+#cardBody {
+    width: inherit;
+    height: 70%;
+}
+
+#cardTxt {
+    font: bold;
+    color: red;
+}
+
+/*h5 {
+    height: 30%;
+}*/
+
+#prodLink {
+    width: inherit;
+}
+
+h3 {
+    color: gray;
+    height: 10px;
+}

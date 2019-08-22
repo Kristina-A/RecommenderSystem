@@ -65,12 +65,12 @@ h3{
 
 .carousel-inner.v-2 .carousel-item-right.active,
 .carousel-inner.v-2 .carousel-item-next {
-    transform: translateX(70%);
+    transform: translateX(30%);
 }
 
 .carousel-inner.v-2 .carousel-item-left.active,
 .carousel-inner.v-2 .carousel-item-prev {
-    transform: translateX(-70%);
+    transform: translateX(-30%);
 }
 
 .carousel-inner.v-2 .carousel-item-right,
