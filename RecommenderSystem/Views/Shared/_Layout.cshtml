@@ -12,11 +12,11 @@
 
 </head>
 <body>
-    <nav class="container navbar-expand-lg navbar-dark bg-dark fixed-top d-flex" style="padding-left: 0px !important; padding-right: 0px !important; align-items: center;">
+    <nav class="container navbar-expand-lg navbar-dark bg-dark fixed-top d-flex">
 
         <!--ICON-->
-        <a class="navbar-brand" href="@Url.Action("Index", "Home")" style="margin-left: 30px;">
-            <img id="logo" src="~/Resources/Logo Orange1.png" alt="GBC Web Shop" width="150" height="60" />
+        <a id="logoLink" class="navbar-brand" href="@Url.Action("Index", "Home")">
+            <img id="logo" src="~/Resources/Logo Orange1.png" alt="GBC Web Shop"/>
         </a>
 
         <!--HAMBURGER FOR RESPONSIVENESS-->
@@ -59,20 +59,20 @@
 
         @if (User.IsInRole("User"))
         {
-            <div style="margin: 0 20px 0 150px;">
-                <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod" data-toggle="dropdown" style=" border: none; border-radius: 20px; padding: 7px; padding-left: 12px;" />
-                <button class="btn btn-outline-light" id="btnSearch" style="border-radius: 10px"><i class="fas fa-search"></i> &nbsp; Pretraži</button>
+            <div id="userNav">
+                <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod" data-toggle="dropdown"/>
+                <button class="btn btn-outline-light" id="btnSearch"><i class="fas fa-search"></i> &nbsp; Pretraži</button>
                 <ul class="dropdown-menu" id="suggestions" aria-labelledby="searchBar"></ul>
             </div>
         }
         else if (User.IsInRole("Admin"))
         {
-            <span style="margin: 0 30px 0 70px;">
-                <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod" style=" border: none; border-radius: 20px; padding: 7px; padding-left: 12px;" />
-                <button class="btn btn-outline-light" id="btnSearch" style="border-radius: 10px"><i class="fas fa-search"></i> &nbsp; Pretraži</button>
+            <span id="adminNav">
+                <input type="search" id="searchBar" name="name" placeholder="Potražite proizvod"/>
+                <button class="btn btn-outline-light" id="btnSearch"><i class="fas fa-search"></i> &nbsp; Pretraži</button>
             </span>
-            <button type="button" class="btn btn-success btn-sm" id="btnAddProduct" style="margin-right: 20px;"><i class="fas fa-plus"></i> &nbsp; Dodaj proizvod</button>
-            <button type="button" class="btn btn-success btn-sm" id="btnAddAdvert" data-toggle="modal" data-target="#addAd" style="margin-right: 20px;"><i class="fas fa-plus"></i> &nbsp; Dodaj reklamu</button>
+            <button type="button" class="btn btn-success btn-sm" id="btnAddProduct"><i class="fas fa-plus"></i> &nbsp; Dodaj proizvod</button>
+            <button type="button" class="btn btn-success btn-sm" id="btnAddAdvert" data-toggle="modal" data-target="#addAd"><i class="fas fa-plus"></i> &nbsp; Dodaj reklamu</button>
         }
     </nav>
 

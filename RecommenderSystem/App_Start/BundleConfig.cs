@@ -29,7 +29,7 @@ namespace RecommenderSystem
                       "~/Content/themes/base/jquery-ui.css",
                       "~/Content/themes/base/autocomplete.css",
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/Site.css"));
         }
     }
 }

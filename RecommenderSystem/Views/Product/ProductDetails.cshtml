@@ -11,7 +11,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <img src="~/Resources/@Model.Picture" class="@Model.Id rounded col-md-6" id="pictureBox" alt="Product picture" style="width:300px; height:200px" data-toggle="modal" data-target="#pictureModal">
+        <img src="~/Resources/@Model.Picture" class="@Model.Id rounded col-md-6" id="pictureBox" alt="Product picture" data-toggle="modal" data-target="#pictureModal">
     </div>
     <div class="col-md-6 float-right">
         @if (User.IsInRole("Admin"))
@@ -133,7 +133,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <img src="~/Resources/@Model.Picture" class="rounded mx-auto d-block" alt="Product picture" style="width:400px; height:400px" />
+                <img id="modalPicture" src="~/Resources/@Model.Picture" class="rounded mx-auto d-block" alt="Product picture" />
             </div>
         </div>
     </div>
@@ -233,5 +233,6 @@
 
 @section scripts {
     @Styles.Render("~/Content/Details.css")
+    @Styles.Render("~/Content/Shared.css")
     @Scripts.Render("~/Scripts/My scripts/ProductDetailsScript.js")
 }

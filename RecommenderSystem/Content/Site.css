@@ -62,3 +62,41 @@ ul, #myUL {
 .active {
     display: block;
 }
+
+nav {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    align-items: center;
+}
+
+#logoLink {
+    margin-left: 30px;
+}
+
+#logo {
+    width:150px;
+    height:60px;
+}
+
+#userNav {
+    margin: 0 20px 0 150px;
+}
+
+#adminNav {
+    margin: 0 30px 0 70px;
+}
+
+#searchBar {
+    border: none;
+    border-radius: 20px;
+    padding: 7px;
+    padding-left: 12px;
+}
+
+#btnSearch {
+    border-radius: 10px;
+}
+
+#btnAddProduct, #btnAddAdvert {
+    margin-right: 20px;
+}
