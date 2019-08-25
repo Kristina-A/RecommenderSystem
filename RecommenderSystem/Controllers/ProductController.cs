@@ -39,7 +39,7 @@ namespace RecommenderSystem.Controllers
                 {
                     Databases.DomainModel.User user = mongo.GetUser(User.Identity.Name);
                     TimescaledbFunctions tdb = new TimescaledbFunctions();
-                    //tdb.ViewProduct(user.Id.ToString(), id);
+                    tdb.ViewProduct(user.Id.ToString(), id);
                     List<ObjectId> customers = tdb.GetCustomersOfProduct(id);
                     List<Tuple<ObjectId, int>> ratingProducts = new List<Tuple<ObjectId, int>>();
 

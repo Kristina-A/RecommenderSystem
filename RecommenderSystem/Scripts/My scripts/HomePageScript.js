@@ -9,22 +9,6 @@ $(document).ready(function () {
         });
     }
 
-    //$("#viewProduct").on("click", function () {
-    //    var prodID = $(this).attr("href");
-    //    var links = prodID.split("/");
-
-    //    $.ajax({
-    //        type: "POST",
-    //        url: '/Product/ViewProduct',
-    //        data: { "prodID": links[3] },
-    //        success: function () {
-    //        },
-    //        error: function () {
-    //            alert("fail");
-    //        }
-    //    });
-    //});
-
     $('.carousel.carousel-multi-item.v-2 .carousel-item').each(function () {
         var next = $(this).next();
         if (!next.length) {

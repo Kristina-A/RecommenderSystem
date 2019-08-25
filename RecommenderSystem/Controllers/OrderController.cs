@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using Databases;
+using System.Net.Mail;
 
 namespace RecommenderSystem.Controllers
 {
@@ -145,12 +146,31 @@ namespace RecommenderSystem.Controllers
                 }
             }
 
+            //send email with details
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress("kristina.antic.000@gmail.com");
+            message.To.Add(new MailAddress(User.Identity.Name));
+            message.Subject = "Potvrda proudžbine";
+            message.Body = "Uspešno ste poručili sledeće proizvode:\n";
+
             foreach (MongoDBRef p in order.Products)
             {
                 Databases.DomainModel.Product prod = mongo.GetProduct(new ObjectId(p.Id.ToString()));
                 tdb.BuyProduct(user.Id.ToString(), prod.Id.ToString(), prod.Price);
+                message.Body += prod.Name + "\n";
             }
 
+            message.Body += "Proizvodi će Vam biti isporučeni najkasnije za 7 dana na adresu "+order.Address;
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.Credentials = new System.Net.NetworkCredential("kristina.antic.000@gmail.com", "scusamativogliosposare");
+            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Port = 587;
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
+
+            smtpClient.Send(message);
+
+            //send notifications
             if (!tdb.NotificationSent(user.Id.ToString()) && (30000 - tdb.MonthShopping(user.Id.ToString())) < 3000 && (30000 - tdb.MonthShopping(user.Id.ToString())) >0)//notifikacija do popusta
             {
                 Databases.DomainModel.Notification notification = new Databases.DomainModel.Notification
@@ -160,7 +180,7 @@ namespace RecommenderSystem.Controllers
                     Date = DateTime.Now.Date,
                     Tag = "do_popusta",
                     Read = false,
-                    User = new MongoDB.Driver.MongoDBRef("users", user.Id)
+                    User = new MongoDBRef("users", user.Id)
                 };
 
 
@@ -175,7 +195,7 @@ namespace RecommenderSystem.Controllers
                     Date = DateTime.Now.Date,
                     Tag = "popust",
                     Read = false,
-                    User = new MongoDB.Driver.MongoDBRef("users", user.Id)
+                    User = new MongoDBRef("users", user.Id)
                 };
 
                 tdb.SendNotification(user.Id.ToString(), mongo.AddNotification(notification, user.Email).ToString(), "popust");

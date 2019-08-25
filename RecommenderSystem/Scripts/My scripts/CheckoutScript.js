@@ -46,7 +46,7 @@
             data: { "address": sendAddress, "note": note, "pay": paying },
             success: function () {
                 window.location.href = '/Home/Index/';
-                alert("Uspesno ste porucili proizvode, stici ce vam mejl sa detaljima :)");
+                alert("Uspešno ste poručili proizvode, stići će vam mejl sa detaljima :)");
             },
             error: function () {
                 alert("fail");
