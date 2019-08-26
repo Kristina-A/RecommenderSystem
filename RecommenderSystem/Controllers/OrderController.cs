@@ -148,7 +148,7 @@ namespace RecommenderSystem.Controllers
 
             //send email with details
             MailMessage message = new MailMessage();
-            message.From = new MailAddress("kristina.antic.000@gmail.com");
+            message.From = new MailAddress("kristina.antic@elfak.rs");
             message.To.Add(new MailAddress(User.Identity.Name));
             message.Subject = "Potvrda proudžbine";
             message.Body = "Uspešno ste poručili sledeće proizvode:\n";
@@ -162,8 +162,8 @@ namespace RecommenderSystem.Controllers
 
             message.Body += "Proizvodi će Vam biti isporučeni najkasnije za 7 dana na adresu "+order.Address;
             SmtpClient smtpClient = new SmtpClient();
-            smtpClient.Credentials = new System.Net.NetworkCredential("kristina.antic.000@gmail.com", "scusamativogliosposare");
-            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Credentials = new System.Net.NetworkCredential("kristina.antic@elfak.rs", "Krisgold02$");
+            smtpClient.Host = "smtp.office365.com";
             smtpClient.Port = 587;
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = true;
