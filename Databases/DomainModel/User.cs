@@ -18,6 +18,7 @@ namespace Databases.DomainModel
         public string Phone { get; set; }
         public List<string> Address { get; set; }
         public DateTime BirthDate { get; set; }
+        public List<string> Interests { get; set; }
 
         public List<MongoDBRef> Orders { get; set; }
 
@@ -34,6 +35,7 @@ namespace Databases.DomainModel
             Messages = new List<MongoDBRef>();
             Notifications = new List<MongoDBRef>();
             Address = new List<string>();
+            Interests = new List<string>();
         }
     }
 }

@@ -63,6 +63,14 @@ namespace RecommendationEngine.Recommenders
 
                     if(!suggestions.Exists(x=>x.ProductID.Equals(neighbor.ProductID)) && !products.Exists(x=>x==neighborProductIndex))
                         suggestions.Add(new Suggestion(userId, neighbor.ProductID, averageProductRating));
+                    else if(suggestions.Exists(x => x.ProductID.Equals(neighbor.ProductID)))
+                    {
+                        if (suggestions.Where(x => x.ProductID.Equals(neighbor.ProductID)).First().Rating < averageProductRating)
+                        {
+                            suggestions.RemoveAt(suggestions.FindIndex(x => x.ProductID.Equals(neighbor.ProductID)));
+                            suggestions.Add(new Suggestion(userId, neighbor.ProductID, averageProductRating));
+                        }
+                    }
                 }
             }
 
@@ -100,7 +108,7 @@ namespace RecommendationEngine.Recommenders
             return items.Select(x => x.Item1).ToList();
         }
 
-        private List<ProductRating> GetNearestNeighbors(ObjectId productId, int numArticles)
+        private List<ProductRating> GetNearestNeighbors(ObjectId productId, int numProducts)
         {
             List<ProductRating> neighbors = new List<ProductRating>();
             int mainProductIndex = ratings.ProductIndexToID.IndexOf(productId);
@@ -123,7 +131,7 @@ namespace RecommendationEngine.Recommenders
 
             neighbors.Sort((c, n) => n.Rating.CompareTo(c.Rating));
 
-            return neighbors.Take(numArticles).ToList();
+            return neighbors.Take(numProducts).ToList();
         }
 
         public List<Suggestion> GetFirstSuggestions(UserBehaviorDatabase db, Databases.DomainModel.User user, int numSuggestions)

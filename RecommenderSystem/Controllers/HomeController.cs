@@ -71,6 +71,11 @@ namespace RecommenderSystem.Controllers
                 }
                 else//no actions, recommendation using gender and birth date
                 {
+                    List<Databases.DomainModel.Product> CategoryProducts = new List<Databases.DomainModel.Product>();
+
+                    foreach(string subcat in user.Interests)
+                        CategoryProducts.AddRange(mongo.GetCategoryProducts(subcat).Take(2));
+
                     List<RecommendationEngine.Objects.Suggestion> suggestions1=recommender1.GetFirstSuggestions(db, user, 10);
 
                     foreach (RecommendationEngine.Objects.Suggestion s in suggestions1)
@@ -78,6 +83,12 @@ namespace RecommenderSystem.Controllers
                         Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
                         if (!products.Exists(x => x.Id.Equals(product.Id)))
                             products.Add(product);
+                    }
+
+                    foreach(Databases.DomainModel.Product p in CategoryProducts)
+                    {
+                        if (!products.Exists(x => x.Id.Equals(p.Id)))
+                            products.Add(p);
                     }
                 }
 
@@ -90,11 +101,26 @@ namespace RecommenderSystem.Controllers
                 recommender1.Train(db);
 
                 List<RecommendationEngine.Objects.Suggestion> suggestions = new List<RecommendationEngine.Objects.Suggestion>();
+                List<Databases.DomainModel.Product> categoryProducts = new List<Databases.DomainModel.Product>();
 
                 if (actions.Count(x => x.UserId.Equals(user.Id)) > 0)
                     suggestions = recommender1.GetSuggestions(user.Id, 5);
                 else
+                {
+                    foreach (string subcat in user.Interests)
+                        categoryProducts.AddRange(mongo.GetCategoryProducts(subcat).Take(2));
+
+                    foreach (Databases.DomainModel.Product p in categoryProducts)
+                    {
+                        foreach (Databases.DomainModel.Advert advert in mongo.GetAdverts(p.Subcategory))
+                        {
+                            if (!adverts.Exists(x => x.Id.Equals(advert.Id)))
+                                adverts.Add(advert);
+                        }
+                    }
+
                     suggestions = recommender1.GetFirstSuggestions(db, user, 10);
+                }
 
                 foreach (RecommendationEngine.Objects.Suggestion s in suggestions)
                 {

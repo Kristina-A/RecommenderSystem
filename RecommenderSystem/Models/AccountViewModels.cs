@@ -106,6 +106,10 @@ namespace RecommenderSystem.Models
         [Display(Name = "Potvrdite šifru")]
         [Compare("Password", ErrorMessage = "Šifra i potvrđena šifra se ne poklapaju.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "Izaberite kategorije koje vas interesuju:")]
+        public Tuple<string,bool>[] Interests { get; set; }
     }
 
     public class ResetPasswordViewModel

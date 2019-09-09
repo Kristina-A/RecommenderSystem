@@ -403,11 +403,23 @@ namespace RecommenderSystem.Controllers
                 recommender1.Train(db);
 
                 List<RecommendationEngine.Objects.Suggestion> suggestions = new List<RecommendationEngine.Objects.Suggestion>();
+                List<Databases.DomainModel.Product> CategoryProducts = new List<Databases.DomainModel.Product>();
+
 
                 if (actions.Count(x => x.UserId.Equals(user.Id)) > 0)
                     suggestions = recommender1.GetSuggestions(user.Id, 5);
                 else
+                {
+                    foreach (string subcat in user.Interests)
+                        CategoryProducts.AddRange(mongo.GetCategoryProducts(subcat).Take(2));
+
+                    foreach (Databases.DomainModel.Product p in CategoryProducts)
+                    {
+                        if (!products.Exists(x => x.Equals(p.Name)))
+                            products.Add(p.Name);
+                    }
                     suggestions = recommender1.GetFirstSuggestions(db, user, 5);
+                }
 
                 foreach (RecommendationEngine.Objects.Suggestion s in suggestions)
                 {

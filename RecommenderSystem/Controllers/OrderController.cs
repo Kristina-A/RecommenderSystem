@@ -168,7 +168,7 @@ namespace RecommenderSystem.Controllers
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = true;
 
-            smtpClient.Send(message);
+            //smtpClient.Send(message);
 
             //send notifications
             if (!tdb.NotificationSent(user.Id.ToString()) && (30000 - tdb.MonthShopping(user.Id.ToString())) < 3000 && (30000 - tdb.MonthShopping(user.Id.ToString())) >0)//notifikacija do popusta

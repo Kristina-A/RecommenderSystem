@@ -458,6 +458,14 @@ namespace Databases
             return advertsCollection.Find(filter).ToList();
         }
 
+        public List<Product> GetProductsByCategory(string subcat)
+        {
+            var productsCollection = db.GetCollection<Product>("products");
+            var filter = Builders<Product>.Filter.Eq("Subcategory", subcat);
+
+            return productsCollection.Find(filter).ToList();
+        }
+
         public List<Advert> GetLaptopAdverts()
         {
             var advertsCollection = db.GetCollection<Advert>("adverts");
