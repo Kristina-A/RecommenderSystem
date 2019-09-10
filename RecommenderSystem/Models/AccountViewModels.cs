@@ -109,7 +109,7 @@ namespace RecommenderSystem.Models
 
         [Required]
         [Display(Name = "Izaberite kategorije koje vas interesuju:")]
-        public Tuple<string,bool>[] Interests { get; set; }
+        public Dictionary<string, bool> Interests { get; set; }
     }
 
     public class ResetPasswordViewModel

@@ -183,7 +183,7 @@ namespace RecommenderSystem.Controllers
                         Phone = model.Phone,
                         Surname = model.Surname,
                         Gender = model.Gender,
-                        Interests = model.Interests.Where(x => x.Item2 == true).Select(x => x.Item1).ToList()
+                        Interests = model.Interests.Where(x=>x.Value==true).Select(x => x.Key).ToList()
                     };
                     newUser.Address.Add(model.Address);
 
