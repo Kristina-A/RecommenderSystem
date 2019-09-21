@@ -47,7 +47,7 @@ namespace RecommendationEngine.Recommenders
         public List<Suggestion> GetSuggestions(ObjectId userId, int numSuggestions)
         {
             int userIndex = ratings.UserIndexToID.IndexOf(userId);
-            List<int> products = GetHighestRatedProductsForUser(userIndex).Take(5).ToList();
+            List<int> products = GetHighestRatedProductsForUser(userIndex).Take(3).ToList();
             List<Suggestion> suggestions = new List<Suggestion>();
 
             foreach (int productIndex in products)

@@ -40,7 +40,7 @@ namespace RecommenderSystem.Controllers
                 //recommend za proizvode
                 RecommendationEngine.Interfaces.IRater rater = new LinearRater(1.0, 5.0);
                 RecommendationEngine.Interfaces.IComparer comparer = new CosineComparer();
-                RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 5);
+                RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender recommender1 = new RecommendationEngine.Recommenders.ItemCollaborativeFilterRecommender(comparer, rater, 3);
                 RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender recommender2 = new RecommendationEngine.Recommenders.UserCollaborativeFilterRecommender(comparer, rater, 5);
 
                 RecommendationEngine.Parsers.UserBehaviorDatabaseParser parser = new RecommendationEngine.Parsers.UserBehaviorDatabaseParser();
@@ -100,11 +100,15 @@ namespace RecommenderSystem.Controllers
 
                 recommender1.Train(db);
 
-                List<RecommendationEngine.Objects.Suggestion> suggestions = new List<RecommendationEngine.Objects.Suggestion>();
+                List<RecommendationEngine.Objects.Suggestion> suggestionsU = new List<RecommendationEngine.Objects.Suggestion>();
+                List<RecommendationEngine.Objects.Suggestion> suggestionsI = new List<RecommendationEngine.Objects.Suggestion>();
                 List<Databases.DomainModel.Product> categoryProducts = new List<Databases.DomainModel.Product>();
 
                 if (actions.Count(x => x.UserId.Equals(user.Id)) > 0)
-                    suggestions = recommender1.GetSuggestions(user.Id, 5);
+                {
+                    suggestionsU = recommender2.GetSuggestions(user.Id, 5);
+                    suggestionsI = recommender1.GetSuggestions(user.Id, 5);
+                }
                 else
                 {
                     foreach (string subcat in user.Interests)
@@ -119,10 +123,21 @@ namespace RecommenderSystem.Controllers
                         }
                     }
 
-                    suggestions = recommender1.GetFirstSuggestions(db, user, 10);
+                    suggestionsI = recommender1.GetFirstSuggestions(db, user, 10);
                 }
 
-                foreach (RecommendationEngine.Objects.Suggestion s in suggestions)
+                foreach (RecommendationEngine.Objects.Suggestion s in suggestionsI)
+                {
+                    Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
+
+                    foreach (Databases.DomainModel.Advert advert in mongo.GetAdverts(product.Subcategory))
+                    {
+                        if (!adverts.Exists(x => x.Id.Equals(advert.Id)))
+                            adverts.Add(advert);
+                    }
+                }
+
+                foreach (RecommendationEngine.Objects.Suggestion s in suggestionsU)
                 {
                     Databases.DomainModel.Product product = mongo.GetProduct(s.ProductID);
 
