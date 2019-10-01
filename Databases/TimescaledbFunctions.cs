@@ -235,12 +235,11 @@ namespace Databases
         {
             NpgsqlCommand cmd = new NpgsqlCommand();
             cmd.Connection = conn;
-            cmd.CommandText = "update reviewedproducts set time=@t, grade=@grade where userid=@id and productid=@pid";
+            cmd.CommandText = "update reviewedproducts set grade=@grade where userid=@id and productid=@pid";
             cmd.CommandType = CommandType.Text;
             cmd.Parameters.Add(new NpgsqlParameter("@id", userID));
             cmd.Parameters.Add(new NpgsqlParameter("@grade", grade));
             cmd.Parameters.Add(new NpgsqlParameter("@pid", prodID));
-            cmd.Parameters.Add(new NpgsqlParameter("@t", DateTime.Now));
             cmd.ExecuteNonQuery();
             cmd.Dispose();
         }
