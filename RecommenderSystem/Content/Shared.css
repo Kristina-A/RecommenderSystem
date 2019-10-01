@@ -46,6 +46,6 @@ a#category {
 #categories {
     color: white;
     width: inherit;
-    height: 500px;
+    height: 100%;
     padding-left: 10px;
 }
