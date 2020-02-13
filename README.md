@@ -12,6 +12,9 @@ Some parts of application are pesonalized for each user. For some of them are us
 ### Recommended ads on home page
 - For ads recommendation combination of user-user and item-item collaborative methods is used
 
+### Last seen
+- List of products user has viewed recently. Activities (viewed product) form TimescaleDB are used.
+
 ### Search recommendations
 - For search recommendation item-item collaborative method is used
 
