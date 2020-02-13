@@ -25,5 +25,7 @@ Some parts of application are pesonalized for each user. For some of them are us
 ### Users who bought this product also bought
 - This part was implemented using user's activities from TimescaleDB (bought product activities)
 
+![alse](https://user-images.githubusercontent.com/37186937/74422539-116d9a80-4e4f-11ea-9fd6-7c721df5947d.png)
+
 ### Notifications
 - This part was implemented using user's activities from TimescaleDB (bought product, reviewed product and received notification activities)
