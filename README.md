@@ -7,7 +7,7 @@ Some parts of application are pesonalized for each user. For some of them are us
 ### Recommended products on home page
 - For products recommendation combination of user-user and item-item collaborative methods is used
 
-
+![Untitled](https://user-images.githubusercontent.com/37186937/74422120-60ff9680-4e4e-11ea-8cb1-a8c58013eed3.png)
 
 ### Recommended ads on home page
 - For ads recommendation combination of user-user and item-item collaborative methods is used
