@@ -29,3 +29,5 @@ Some parts of application are pesonalized for each user. For some of them are us
 
 ### Notifications
 - This part was implemented using user's activities from TimescaleDB (bought product, reviewed product and received notification activities)
+
+![notification](https://user-images.githubusercontent.com/37186937/74422779-6f01e700-4e4f-11ea-8a0c-886ba87ac98a.png)
