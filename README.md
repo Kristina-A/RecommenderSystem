@@ -22,6 +22,8 @@ Some parts of application are pesonalized for each user. For some of them are us
 ### Search recommendations
 - For search recommendation item-item collaborative method is used
 
+![search](https://user-images.githubusercontent.com/37186937/74422901-a53f6680-4e4f-11ea-9b75-f321ab8d3920.png)
+
 ### Users who bought this product also bought
 - This part was implemented using user's activities from TimescaleDB (bought product activities)
 
