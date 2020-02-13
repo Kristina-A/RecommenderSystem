@@ -17,6 +17,8 @@ Some parts of application are pesonalized for each user. For some of them are us
 ### Last seen
 - List of products user has viewed recently. Activities (viewed product) form TimescaleDB are used.
 
+![seen](https://user-images.githubusercontent.com/37186937/74422332-b9cf2f00-4e4e-11ea-9b01-97d6758afede.png)
+
 ### Search recommendations
 - For search recommendation item-item collaborative method is used
 
