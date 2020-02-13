@@ -12,6 +12,8 @@ Some parts of application are pesonalized for each user. For some of them are us
 ### Recommended ads on home page
 - For ads recommendation combination of user-user and item-item collaborative methods is used
 
+![ads](https://user-images.githubusercontent.com/37186937/74422219-8ee4db00-4e4e-11ea-905e-22241424ef81.png)
+
 ### Last seen
 - List of products user has viewed recently. Activities (viewed product) form TimescaleDB are used.
 
